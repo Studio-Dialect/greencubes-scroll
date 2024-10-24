@@ -9,6 +9,8 @@ const Video360Player = () => {
     const [showGyroButton, setShowGyroButton] = useState(false); // State to show/hide the button
     const [gyroEnabled, setGyroEnabled] = useState(false); // Track if gyro permission is granted
 
+    console.log(gyroEnabled);
+
     useEffect(() => {
         const initializeViewer = async () => {
             // Initialize the viewer
@@ -25,7 +27,7 @@ const Video360Player = () => {
                 plugins: [
                     new ControlBar({
                         gyroButton: {
-                            position: ControlBar.POSITION.TOP_RIGHT,
+                            position: ControlBar.POSITION.TOP_LEFT,
                             order: 0,
                         },
                         showBackground: false,
@@ -53,6 +55,7 @@ const Video360Player = () => {
                 if (permissionStatus === 'granted') {
                     setGyroEnabled(true); // Gyro permission granted
                     setShowGyroButton(false); // Hide the button
+                    localStorage.setItem('gyroPermission', 'granted'); // Persist gyro permission state
                     console.log('Gyro permission granted');
                 } else {
                     console.log('Gyro permission denied');
@@ -63,11 +66,16 @@ const Video360Player = () => {
         }
     };
 
-    // Show the gyro permission button if the permission hasn't been granted
+    // Check local storage for gyro permission on initial load
     useEffect(() => {
+        const storedPermission = localStorage.getItem('gyroPermission');
         const shouldQueryPermission = DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function";
-        if (shouldQueryPermission) {
-            setShowGyroButton(true);
+
+        if (storedPermission === 'granted') {
+            setGyroEnabled(true); // If permission is already granted, don't show the button
+            setShowGyroButton(false);
+        } else if (shouldQueryPermission) {
+            setShowGyroButton(true); // Show the button if permission is needed
         }
     }, []);
 
