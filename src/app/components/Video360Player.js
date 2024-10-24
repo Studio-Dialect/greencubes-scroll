@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import View360, { EquirectProjection, ControlBar, GyroControl } from '@egjs/view360';
+import View360, { EquirectProjection, ControlBar } from '@egjs/view360';
 import "@egjs/view360/css/view360.min.css";
 import "@egjs/view360/css/control-bar.min.css";
 import Image from 'next/image';
@@ -10,10 +10,11 @@ const Video360Player = () => {
     const [gyroEnabled, setGyroEnabled] = useState(false); // Track if gyro permission is granted
     const [viewer, setViewer] = useState(null); // Store the viewer instance
 
-    console.log(gyroEnabled);
+    const initializeViewer = (enableGyro = false) => {
+        if (viewer) {
+            viewer.destroy(); // Destroy existing viewer if any
+        }
 
-    // Function to initialize the viewer
-    const initializeViewer = () => {
         const newViewer = new View360('#viewer', {
             projection: new EquirectProjection({
                 src: '/360Cam_sm.mp4', // Path to your 360 video
@@ -22,12 +23,12 @@ const Video360Player = () => {
                     muted: true,
                 },
             }),
-            gyro: true, // Gyro functionality directly enabled if permission is granted
+            gyro: enableGyro, // Enable gyro if permission is granted
             zoom: false,
             plugins: [
                 new ControlBar({
                     gyroButton: {
-                        position: ControlBar.POSITION.TOP_LEFT,
+                        position: ControlBar.POSITION.TOP_RIGHT,
                         order: 0,
                     },
                     showBackground: false,
@@ -38,11 +39,12 @@ const Video360Player = () => {
             ],
         });
 
-        setViewer(newViewer); // Store viewer instance
+        setViewer(newViewer); // Store the new viewer instance
     };
 
     useEffect(() => {
-        initializeViewer();
+        // Initialize the viewer without gyro by default
+        initializeViewer(false);
 
         // Clean up the viewer when the component is unmounted
         return () => {
@@ -58,15 +60,13 @@ const Video360Player = () => {
             try {
                 const permissionStatus = await DeviceMotionEvent.requestPermission();
                 if (permissionStatus === 'granted') {
-                    setGyroEnabled(true); // Gyro permission granted
+                    setGyroEnabled(true); // Update state to reflect gyro permission granted
                     setShowGyroButton(false); // Hide the button
                     localStorage.setItem('gyroPermission', 'granted'); // Persist gyro permission state
 
-                    // Reinitialize or update the viewer to activate gyro control
-                    if (viewer) {
-                        viewer.updateOptions({ gyro: true }); // Enable gyro immediately
-                    }
-                    console.log('Gyro permission granted and activated');
+                    // Reinitialize the viewer with gyro enabled
+                    initializeViewer(true);
+                    console.log('Gyro permission granted and viewer reinitialized with gyro');
                 } else {
                     console.log('Gyro permission denied');
                 }
@@ -84,6 +84,7 @@ const Video360Player = () => {
         if (storedPermission === 'granted') {
             setGyroEnabled(true); // If permission is already granted, enable gyro
             setShowGyroButton(false); // Hide the button
+            initializeViewer(true); // Initialize the viewer with gyro enabled
         } else if (shouldQueryPermission) {
             setShowGyroButton(true); // Show the button if permission is needed
         }
