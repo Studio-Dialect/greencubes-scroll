@@ -27,10 +27,7 @@ const Video360Player = () => {
             zoom: false,
             plugins: [
                 new ControlBar({
-                    gyroButton: {
-                        position: ControlBar.POSITION.TOP_RIGHT,
-                        order: 0,
-                    },
+                    gyroButton: false;
                     showBackground: false,
                     progressBar: false,
                     videoTime: false, 
