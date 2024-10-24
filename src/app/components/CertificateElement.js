@@ -1,6 +1,7 @@
 import { HiDownload } from "react-icons/hi";
 import { toJpeg } from 'html-to-image';
 import { useRef } from 'react';
+import Image from 'next/image'; // Import Next.js Image
 
 export default function Certificate({ userName }) {
     const certificateRef = useRef(); // Reference to the certificate element
@@ -29,19 +30,24 @@ export default function Certificate({ userName }) {
             <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
                 {/* Header */}
                 <div className="relative bg-gradient-to-r from-green-400 to-yellow-300 bg-cover w-full h-40 rounded-t-none rounded-b-[100%] flex items-center justify-center mt-[-4vh]">
-                    <img
+                    <Image
                         src="/greencubes-logo.svg"
                         alt="Green Cube"
+                        width={200}
+                        height={80}
                         className="w-full h-20 px-12 mt-[-1.5vh]"
+                        priority
                     />
                 </div>
         
                 {/* Main Content */}
                 <div className="relative mt-[-7vh] z-10">
                     <div className="flex justify-center">
-                    <img
+                    <Image
                         src="/cube-image.jpg"
                         alt="Green Cube"
+                        width={128}
+                        height={128}
                         className="w-32 h-32 object-cover rounded-full"
                     />
                     </div>
@@ -49,9 +55,9 @@ export default function Certificate({ userName }) {
                     <div className="text-center mt-4 px-6">
                     <h2 className="text-3xl font-bold">1 Green Cube</h2>
                     <p className="text-gray-700 mt-2 text-sm">Amable forest, Costa Rica</p>
-                    <p className="text-gray-700 text-sm">8°42'22"N, 83°10'54"W</p>
+                    <p className="text-gray-700 text-sm">8&#176;42&#39;22&#34;N, 83&#176;10&#39;54&#34;W</p>
                     <p className="text-gray-700 mt-4 text-sm text-left">
-                        Thank you for your support in helping secure our planet’s environment and biodiversity abundance.
+                        Thank you for your support in helping secure our planet&#39;s environment and biodiversity abundance.
                     </p>
                     <p className="text-gray-900 mt-2 italic text-2xl">{userName}</p>
                     <p className="text-gray-700 mt-2 text-sm text-left">
@@ -62,17 +68,17 @@ export default function Certificate({ userName }) {
         
                     {/* Signature */}
                     <div className="flex justify-left items-left mt-3 px-7">
-                    <img src="/signature.png" alt="Signature" className="w-[40vw]" />
+                    <Image src="/signature.png" alt="Signature" width={300} height={100} className="w-[40vw]" />
                     </div>
         
                     {/* Footer */}
                     <div className="flex justify-between items-center mt-2 mb-5 px-[13vw]">
-                    <img src="/hexagon-logo.svg" alt="Hexagon Logo" className="w-[25vw]" />
+                    <Image src="/hexagon-logo.svg" alt="Hexagon Logo" width={200} height={200} className="w-[25vw]" />
                     </div>
                 </div>
             </div>
             <div className="flex justify-end items-center mt-[-8vh] mb-5 pr-6 w-full">
-                <img src="/seal.webp" alt="Hexagon Logo" className="w-[35vw]" />
+                <Image src="/seal.webp" alt="Hexagon Logo" width={150} height={150} className="w-[35vw]" />
             </div>
         </div>
         {/* Download Section */}
@@ -105,7 +111,7 @@ export default function Certificate({ userName }) {
 
             {/* Footer Section with Full Logo Image */}
             <div className="mt-12">
-            <img src="/greencubes-logo-white.svg" alt="Green Cubes Footer" className="w-72"/>
+            <Image src="/greencubes-logo-white.svg" alt="Green Cubes Footer" width={288} height={96} className="w-72"/>
             </div>
             </div>
         </div>
