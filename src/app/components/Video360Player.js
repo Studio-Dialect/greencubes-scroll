@@ -22,12 +22,12 @@ const Video360Player = () => {
                     muted: true,
                 },
             }),
-            gyro: gyroEnabled, // Gyro functionality directly enabled if permission is granted
+            gyro: true, // Gyro functionality directly enabled if permission is granted
             zoom: false,
             plugins: [
                 new ControlBar({
                     gyroButton: {
-                        position: ControlBar.POSITION.TOP_RIGHT,
+                        position: ControlBar.POSITION.TOP_LEFT,
                         order: 0,
                     },
                     showBackground: false,
