@@ -8,43 +8,48 @@ import Image from 'next/image';
 const Video360Player = () => {
     const [showGyroButton, setShowGyroButton] = useState(false); // State to show/hide the button
     const [gyroEnabled, setGyroEnabled] = useState(false); // Track if gyro permission is granted
+    const [viewer, setViewer] = useState(null); // Store the viewer instance
 
     console.log(gyroEnabled);
 
-    useEffect(() => {
-        const initializeViewer = async () => {
-            // Initialize the viewer
-            const viewer = new View360('#viewer', {
-                projection: new EquirectProjection({
-                    src: '/360Cam_sm.mp4', // Path to your 360 video
-                    video: {
-                        autoplay: true,
-                        muted: true,
+    // Function to initialize the viewer
+    const initializeViewer = () => {
+        const newViewer = new View360('#viewer', {
+            projection: new EquirectProjection({
+                src: '/360Cam_sm.mp4', // Path to your 360 video
+                video: {
+                    autoplay: true,
+                    muted: true,
+                },
+            }),
+            gyro: gyroEnabled, // Gyro functionality directly enabled if permission is granted
+            zoom: false,
+            plugins: [
+                new ControlBar({
+                    gyroButton: {
+                        position: ControlBar.POSITION.TOP_RIGHT,
+                        order: 0,
                     },
+                    showBackground: false,
+                    progressBar: false,
+                    videoTime: false, 
+                    volumeButton: false,
                 }),
-                gyro: true, // Gyro functionality directly enabled
-                zoom: false,
-                plugins: [
-                    new ControlBar({
-                        gyroButton: {
-                            position: ControlBar.POSITION.TOP_LEFT,
-                            order: 0,
-                        },
-                        showBackground: false,
-                        progressBar: false,
-                        videoTime: false, 
-                        volumeButton: false,
-                    }),
-                ],
-            });
+            ],
+        });
 
-            // Clean up the viewer when the component is unmounted
-            return () => {
-                viewer.destroy();
-            };
-        };
+        setViewer(newViewer); // Store viewer instance
+    };
 
+    useEffect(() => {
         initializeViewer();
+
+        // Clean up the viewer when the component is unmounted
+        return () => {
+            if (viewer) {
+                viewer.destroy();
+            }
+        };
     }, []);
 
     const handleGyroPermission = async () => {
@@ -56,7 +61,12 @@ const Video360Player = () => {
                     setGyroEnabled(true); // Gyro permission granted
                     setShowGyroButton(false); // Hide the button
                     localStorage.setItem('gyroPermission', 'granted'); // Persist gyro permission state
-                    console.log('Gyro permission granted');
+
+                    // Reinitialize or update the viewer to activate gyro control
+                    if (viewer) {
+                        viewer.updateOptions({ gyro: true }); // Enable gyro immediately
+                    }
+                    console.log('Gyro permission granted and activated');
                 } else {
                     console.log('Gyro permission denied');
                 }
@@ -72,8 +82,8 @@ const Video360Player = () => {
         const shouldQueryPermission = DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function";
 
         if (storedPermission === 'granted') {
-            setGyroEnabled(true); // If permission is already granted, don't show the button
-            setShowGyroButton(false);
+            setGyroEnabled(true); // If permission is already granted, enable gyro
+            setShowGyroButton(false); // Hide the button
         } else if (shouldQueryPermission) {
             setShowGyroButton(true); // Show the button if permission is needed
         }
