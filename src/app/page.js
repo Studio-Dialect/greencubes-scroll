@@ -59,7 +59,7 @@ export default function Home() {
         <div>
             {/* Show the Video360Player first */}
             <motion.div
-              className="w-full h-full relative z-10"
+              className="w-full h-[90vh] relative z-10"
               initial={{ opacity: 0 }} // Start invisible
               animate={{ opacity: showVideo360 ? 1 : 0 }} // Fade in once loaded
               transition={{ duration: 1 }} // Smooth fade-in
