@@ -38,7 +38,7 @@ const Video360Player = () => {
     }, []);
 
     return (
-        <div id="viewer" style={{ width: '100%', height: '100vh', backgroundColor: 'black' }} className='overflow-hidden'>
+        <div id="viewer" style={{ width: '100%', height: '90vh', backgroundColor: 'black' }} className='overflow-hidden'>
             <canvas className="view360-canvas" />
         </div>
     );

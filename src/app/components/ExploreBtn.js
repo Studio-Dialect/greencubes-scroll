@@ -1,6 +1,6 @@
 export default function ExploreBtn({ onExploreClick }) {
     return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center h-[85vh]">
         <div className="relative w-[80vw]">
 
         {/* Concentric Circles */}

@@ -59,9 +59,9 @@ export default function Home() {
         <div>
             {/* Show the Video360Player first */}
             <motion.div
-              className="w-full h-screen relative z-10"
+              className="w-full h-full relative z-10"
               initial={{ opacity: 0 }} // Start invisible
-              animate={{ opacity: video360Loaded ? 1 : 0 }} // Fade in once loaded
+              animate={{ opacity: showVideo360 ? 1 : 0 }} // Fade in once loaded
               transition={{ duration: 1 }} // Smooth fade-in
             >
                 <Video360Player onLoadedData={handleVideo360Loaded} />
@@ -82,6 +82,7 @@ export default function Home() {
               className="w-full max-w-3xl"
               muted
               playsInline
+              poster="/intro_poster.png"
               // Video will not autoplay, only play on click
             />
           </div>  
