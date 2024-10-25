@@ -4,32 +4,76 @@ import { toJpeg } from 'html-to-image';
 import { useEffect, useRef } from 'react';
 import Image from 'next/image'; // Import Next.js Image
 import { sendEvent } from '../../../utils/analytics';
+import * as htmlToImage from 'html-to-image';
+
 
 export default function Certificate({ userName }) {
     const certificateRef = useRef(); // Reference to the certificate element
 
-    const handleDownload = () => {
-        // Convert the certificate HTML section to a JPEG image
-        if (certificateRef.current === null) {
-            return;
+    const waitForFonts = async () => {
+        if (document.fonts) {
+            await document.fonts.ready;
         }
-
+    };
+    
+    const waitForImages = async (element) => {
+    const images = element.querySelectorAll('img');
+    await Promise.all(
+        Array.from(images).map((img) => {
+        if (img.complete && img.naturalHeight !== 0) {
+            return Promise.resolve();
+        } else {
+            return new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+            });
+        }
+        })
+    );
+    };
+    
+    const handleDownload = async () => {
+        if (certificateRef.current === null) return;
+    
         sendEvent({
             action: 'certificate_downloaded',
             value: "Certificate Downloaded",
         });
+    
+        try {
+            await waitForFonts();
+            await waitForImages(certificateRef.current);
+    
+            // Force reflow for reliability
+            certificateRef.current.style.display = 'none';
+            certificateRef.current.offsetHeight; // Trigger reflow
+            certificateRef.current.style.display = '';
 
-        toJpeg(certificateRef.current, { quality: 0.95 })
-            .then((dataUrl) => {
+            // Capture image and retry up to two more times
+                
+            await htmlToImage.toJpeg(certificateRef.current, { quality: 0.95 });
+            await htmlToImage.toJpeg(certificateRef.current, { quality: 0.95 });
+
+            const dataUrl = await htmlToImage.toJpeg(certificateRef.current, { quality: 0.95 });
+
+            if (dataUrl) {
+                const blob = await fetch(dataUrl).then((res) => res.blob());
+                const file = new File([blob], 'certificate.jpg', { type: blob.type });
+                
+                // Initiate download by creating an anchor element
                 const link = document.createElement('a');
-                link.download = 'certificate.jpg'; // Download file name
-                link.href = dataUrl;
+                link.download = file.name;
+                link.href = URL.createObjectURL(file);
                 link.click();
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    };
+                URL.revokeObjectURL(link.href); // Clean up the object URL
+            } else {
+                console.error('Failed to capture image after multiple attempts.');
+            }
+            } catch (err) {
+            console.error('Error capturing image:', err);
+            }
+        };
+    
 
     return (
         <>
@@ -86,7 +130,7 @@ export default function Certificate({ userName }) {
                 </div>
             </div>
             <div className="flex justify-end items-center mt-[-8vh] mb-5 pr-6 w-full">
-                <Image src="/seal.webp" alt="Hexagon Logo" width={150} height={150} className="w-[35vw]" />
+                <Image src="/seal.png" alt="Hexagon Seal" width={150} height={150} className="w-[35vw]" />
             </div>
         </div>
         {/* Download Section */}
