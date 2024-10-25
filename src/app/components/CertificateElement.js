@@ -26,16 +26,16 @@ export default function Certificate({ userName }) {
     return (
         <>
         {/* Certificate Section */}
-        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 shadow px-5" ref={certificateRef}> {/* Add ref here */}
+        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 shadow px-5 pt-4" ref={certificateRef}> {/* Add ref here */}
             <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
                 {/* Header */}
-                <div className="relative bg-gradient-to-r from-green-400 to-yellow-300 bg-cover w-full h-40 rounded-t-none rounded-b-[100%] flex items-center justify-center mt-[-4vh]">
+                <div className="relative bg-gradient-to-r from-green-400 to-yellow-300 bg-cover w-full h-36 rounded-t-none rounded-b-[100%] flex items-center justify-center mt-[-4vh]">
                     <Image
                         src="/greencubes-logo.svg"
                         alt="Green Cube"
                         width={200}
                         height={80}
-                        className="w-full h-20 px-12 mt-[-1.5vh]"
+                        className="w-full h-16 px-12 mt-[-1.5vh]"
                         priority
                     />
                 </div>
@@ -54,16 +54,16 @@ export default function Certificate({ userName }) {
         
                     <div className="text-center mt-4 px-6">
                     <h2 className="text-3xl font-bold">1 Green Cube</h2>
-                    <p className="text-gray-700 mt-2 text-sm">Amable forest, Costa Rica</p>
-                    <p className="text-gray-700 text-sm">8&#176;42&#39;22&#34;N, 83&#176;10&#39;54&#34;W</p>
-                    <p className="text-gray-700 mt-4 text-sm text-left">
+                    <p className="mt-1 text-xs">Amable forest, Costa Rica</p>
+                    <p className="text-xs">8&#176;42&#39;22&#34;N, 83&#176;10&#39;54&#34;W</p>
+                    <p className="text-gray-700 mt-4 text-xs text-left">
                         Thank you for your support in helping secure our planet&#39;s environment and biodiversity abundance.
                     </p>
-                    <p className="text-gray-900 mt-2 italic text-2xl">{userName}</p>
-                    <p className="text-gray-700 mt-2 text-sm text-left">
+                    <p className="text-gray-900 mt-2 italic text-xl">{userName}</p>
+                    <p className="text-gray-700 mt-2 text-xs text-left">
                         Protecting one cubic meter of tropical rainforest and supporting the expansion of the COBIGA biodiversity corridor.
                     </p>
-                    <p className="text-gray-700 mt-2 text-right text-sm pr-4">1 Jan 2025 - 31 Dec 2025</p>
+                    <p className="text-gray-700 mt-2 text-right text-xs pr-4">1 Jan 2025 - 31 Dec 2025</p>
                     </div>
         
                     {/* Signature */}

@@ -9,7 +9,7 @@ const ScrollElement = () => {
     const router = useRouter(); // Use Next.js router to navigate to Certificate
 
     // Step 1: Zoom out the first image from scale 10 to 1, hold scale at 1
-    const scale = useTransform(scrollYProgress, [0, 0.2, 0.3], [8, 2, 1]);
+    const scale = useTransform(scrollYProgress, [0, 0.2, 0.3], [7, 2, 1]);
 
     // Adjust the object position for the first image to keep it centered
     const objectPositionY = useTransform(scrollYProgress, [0, 0.3], [-300, 0]);
@@ -22,14 +22,14 @@ const ScrollElement = () => {
     // Step 3: Key messages animation (slide in)
     const message1X = useTransform(scrollYProgress, [0.1, 0.15], [-400, 0]);
     const message1Y = useTransform(scrollYProgress, [0.15, 0.3], [0, 100]);
-    const message1Opacity = useTransform(scrollYProgress, [0.1, 0.15, 0.35, 0.45], [0, 1,1, 0]);
+    const message1Opacity = useTransform(scrollYProgress, [0.1, 0.15, 0.25, 0.35], [0, 1,1, 0]);
 
-    const message2X = useTransform(scrollYProgress, [0.5, 0.55], ['100%', '0%']);
-    const message2Y = useTransform(scrollYProgress, [0.55, 0.7], [0, 100]);
-    const message2Opacity = useTransform(scrollYProgress, [0.5, 0.6, 0.9], [0, 1, 0]);
+    const message2X = useTransform(scrollYProgress, [0.4, 0.45], ['100%', '0%']);
+    const message2Y = useTransform(scrollYProgress, [0.45, 0.6], [0, 100]);
+    const message2Opacity = useTransform(scrollYProgress, [0.4, 0.45, 0.7, 0.8], [0, 1, 1, 0]);
 
     // Step 4: Final section scroll for call to action
-    const callToActionY = useTransform(scrollYProgress, [0.7, 1], [800, 0]);
+    const callToActionY = useTransform(scrollYProgress, [0.7, 0.9], [800, 0]);
     const callToActionOpacity = useTransform(scrollYProgress, [0.7, 0.85], [0, 1]);
 
     // Handle form submission
@@ -40,7 +40,7 @@ const ScrollElement = () => {
     };
 
     return (
-        <div style={{ height: '2000vh' }} className='bg-black'> {/* Tall container for scrolling */}
+        <div style={{ height: '1000vh' }} className='bg-black'> {/* Tall container for scrolling */}
             
             {/* Step 1: First Image zooms out */}
             <motion.div 
@@ -48,9 +48,11 @@ const ScrollElement = () => {
                 className="w-full h-screen fixed top-0 left-0"
             >
                 <motion.img 
-                    src="/amable_ortho.jpg" 
+                    src="/amable_ortho.webp" 
                     alt="Zoomable Image"
                     className="w-screen h-screen object-cover"
+                    unoptimized
+                    priority
                 />
             </motion.div>
 

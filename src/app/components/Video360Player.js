@@ -4,6 +4,8 @@ import View360, { EquirectProjection, ControlBar } from '@egjs/view360';
 import "@egjs/view360/css/view360.min.css";
 import "@egjs/view360/css/control-bar.min.css";
 import Image from 'next/image';
+import { IoIosArrowDown } from "react-icons/io";
+
 
 const Video360Player = () => {
     const [showGyroButton, setShowGyroButton] = useState(false); // State to show/hide the button
@@ -110,6 +112,10 @@ const Video360Player = () => {
                     </button>
                 </div>
             )}
+            <div className="absolute bottom-0 left-0 w-full h-[86vh] inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparent">
+                <div className='animate animate-pulse bg-black/60 border border-white rounded-full p-3'><IoIosArrowDown />
+                </div>
+            </div>
         </div>
     );
 };
