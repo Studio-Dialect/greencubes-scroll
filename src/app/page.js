@@ -6,8 +6,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ScrollElement from './components/ScrollElement';
 import Image from 'next/image';
 import AmablePoster from './components/AmablePoster';
+import Video360Player from './components/Video360Player';
 
-const Video360Player = dynamic(() => import('./components/Video360Player'), { ssr: false });
+//const Video360Player = dynamic(() => import('./components/Video360Player'), { ssr: false });
 
 export default function Home() {
   const [btnVisible, setBtnVisible] = useState(true);
@@ -44,17 +45,13 @@ export default function Home() {
   }, []);
 
   const handleVideoEnd = () => {
-    // Pause on the last frame
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = videoRef.current.duration - 0.1; // Small offset to avoid reset to black
-    }
      // Show AmablePoster
 
     setShowAmablePoster(false);
+    setShowVideo360(true);
     setTimeout(() => {
        // Hide AmablePoster after Video360Player loads
-      setShowVideo360(true); // Set showVideo360 after showing AmablePoster
+      // Set showVideo360 after showing AmablePoster
       setShowMainVideo(false);
     }, 200); // Smooth fade-out after Video360Player is ready
   };
