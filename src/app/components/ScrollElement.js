@@ -9,20 +9,22 @@ const ScrollElement = () => {
     const router = useRouter(); // Use Next.js router to navigate to Certificate
 
     // Step 1: Zoom out the first image from scale 10 to 1, hold scale at 1
-    const scale = useTransform(scrollYProgress, [0, 0.2, 0.3], [7, 2, 1]);
+    const scale = useTransform(scrollYProgress, [0, 0.3, 0.6], [6, 3, 1]);
+    const secondScale = useTransform(scrollYProgress, [0.3, 0.6], [3, 1]);
 
     // Adjust the object position for the first image to keep it centered
-    const objectPositionY = useTransform(scrollYProgress, [0, 0.3], [-300, 0]);
-    const objectPositionX = useTransform(scrollYProgress, [0, 0.3], [-230, 0]);
+    const objectPositionY = useTransform(scrollYProgress, [0, 0.6], [-300, 0]);
+    const objectPositionX = useTransform(scrollYProgress, [0, 0.6], [-230, 0]);
+    
 
     // Step 2: Opacity transition for first and second image
     const firstImageOpacity = useTransform(scrollYProgress, [0.2, 0.3, 0.4], [1, 1, 1]);
     const secondImageOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.4], [0, 0.4, 0.4]);
 
     // Step 3: Key messages animation (slide in)
-    const message1X = useTransform(scrollYProgress, [0.1, 0.15], [-400, 0]);
+    const message1X = useTransform(scrollYProgress, [0.05, 0.1], [-400, 0]);
     const message1Y = useTransform(scrollYProgress, [0.15, 0.3], [0, 100]);
-    const message1Opacity = useTransform(scrollYProgress, [0.1, 0.15, 0.25, 0.35], [0, 1,1, 0]);
+    const message1Opacity = useTransform(scrollYProgress, [0.05, 0.1, 0.25, 0.35], [0, 1,1, 0]);
 
     const message2X = useTransform(scrollYProgress, [0.4, 0.45], ['100%', '0%']);
     const message2Y = useTransform(scrollYProgress, [0.45, 0.6], [0, 100]);
@@ -51,14 +53,13 @@ const ScrollElement = () => {
                     src="/amable_ortho.webp" 
                     alt="Zoomable Image"
                     className="w-screen h-screen object-cover"
-                    unoptimized
                     priority
                 />
             </motion.div>
 
             {/* Step 2: Second Image fades in */}
             <motion.div 
-                style={{ opacity: secondImageOpacity }}
+                style={{ opacity: secondImageOpacity, scale: secondScale, y: objectPositionY, x: objectPositionX }}
                 className="w-full h-screen fixed top-0 left-0  mix-blend-plus-lighter"
             >
                 <motion.img 
