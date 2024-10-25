@@ -50,13 +50,13 @@ export default function Home() {
       videoRef.current.currentTime = videoRef.current.duration - 0.1; // Small offset to avoid reset to black
     }
      // Show AmablePoster
-    setShowVideo360(true); // Set showVideo360 after showing AmablePoster
-    setShowMainVideo(false);
 
+    setShowAmablePoster(false);
     setTimeout(() => {
-      setShowAmablePoster(false); // Hide AmablePoster after Video360Player loads
-      
-    }, 500); // Smooth fade-out after Video360Player is ready
+       // Hide AmablePoster after Video360Player loads
+      setShowVideo360(true); // Set showVideo360 after showing AmablePoster
+      setShowMainVideo(false);
+    }, 200); // Smooth fade-out after Video360Player is ready
   };
 
   const handleVideo360Loaded = () => {
@@ -124,7 +124,7 @@ export default function Home() {
       <motion.div
         animate={btnVisible ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 1 }}
-        className={`flex flex-col justify-center items-center h-[96vh] pb-24 pt-20 fixed top-0 left-0 w-screen z-20 ${btnVisible ? "pointer-events-auto" : "pointer-events-none"}`}
+        className={`flex flex-col justify-between items-center h-[96vh] pb-24 pt-12 fixed top-0 left-0 w-screen z-20 ${showVideo360 ? "display-none" : "flex"}`}
       >
         <div className="text-3xl text-white text-center">A CUBIC METER<br/>OF LIFE</div>
         <ExploreBtn onExploreClick={handleExploreClick} />

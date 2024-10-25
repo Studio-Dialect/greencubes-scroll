@@ -52,6 +52,7 @@ const Video360Player = () => {
     }, []);
 
     const handleGyroPermission = async () => {
+        console.log('clicked!')
         const shouldQueryPermission = DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function";
         if (shouldQueryPermission) {
             try {
@@ -93,7 +94,7 @@ const Video360Player = () => {
 
             {/* Show an overlay button if gyro permission is required */}
             {showGyroButton && !gyroEnabled && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 z-20">
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 z-30">
                     <Image
                         src="/look-around.svg"
                         alt="Look Around"
