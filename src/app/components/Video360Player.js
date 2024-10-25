@@ -112,7 +112,7 @@ const Video360Player = () => {
                     </button>
                 </div>
             )}
-            <div className="absolute bottom-0 left-0 w-full h-[86vh] inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparent">
+            <div className="absolute bottom-0 left-0 w-full h-[86vh] inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparentm pointer-events-none">
                 <div className='animate animate-pulse bg-black/60 border border-white rounded-full p-3'><IoIosArrowDown />
                 </div>
             </div>
