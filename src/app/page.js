@@ -131,7 +131,7 @@ export default function Home() {
       <motion.div
         animate={btnVisible ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 1 }}
-        className={`flex flex-col justify-between items-center h-[96vh] pb-24 pt-12 fixed top-0 left-0 w-screen z-20 ${showVideo360 ? "display-none" : "flex"}`}
+        className={`flex flex-col justify-between items-center h-[96vh] pb-24 pt-12 fixed top-0 left-0 w-screen z-20 ${showVideo360 ? "hidden" : "flex"}`}
       >
         <div className="text-3xl text-white text-center">A CUBIC METER<br/>OF LIFE</div>
         <ExploreBtn onExploreClick={handleExploreClick} />
