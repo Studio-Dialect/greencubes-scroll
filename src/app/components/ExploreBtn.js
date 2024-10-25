@@ -11,7 +11,7 @@ export default function ExploreBtn({ onExploreClick }) {
             <div className="w-60 h-60 border-2 border-white rounded-full"></div>
         </div>
         <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-44 h-44 border-2 border-white rounded-full bg-black/60"></div>
+            <div className="w-44 h-44 border-2 border-white rounded-full bg-black/60" onClick={onExploreClick}></div>
         </div>
 
         {/* Text "Explore" */}
