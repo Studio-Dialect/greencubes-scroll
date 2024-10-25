@@ -9,22 +9,23 @@ const ScrollElement = () => {
     const router = useRouter(); // Use Next.js router to navigate to Certificate
 
     // Step 1: Zoom out the first image from scale 10 to 1, hold scale at 1
-    const scale = useTransform(scrollYProgress, [0, 0.2, 0.3], [10, 2, 1]);
+    const scale = useTransform(scrollYProgress, [0, 0.2, 0.3], [8, 2, 1]);
 
     // Adjust the object position for the first image to keep it centered
-    const objectPositionY = useTransform(scrollYProgress, [0, 0.3], [-500, 0]);
-    const objectPositionX = useTransform(scrollYProgress, [0, 0.3], [-300, 0]);
+    const objectPositionY = useTransform(scrollYProgress, [0, 0.3], [-300, 0]);
+    const objectPositionX = useTransform(scrollYProgress, [0, 0.3], [-230, 0]);
 
     // Step 2: Opacity transition for first and second image
     const firstImageOpacity = useTransform(scrollYProgress, [0.2, 0.3, 0.4], [1, 1, 1]);
-    const secondImageOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.4], [0, 0.7, 0.7]);
+    const secondImageOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.4], [0, 0.4, 0.4]);
 
     // Step 3: Key messages animation (slide in)
-    const message1X = useTransform(scrollYProgress, [0.4, 0.45], [-100, 0]);
-    const message1Y = useTransform(scrollYProgress, [0.45, 0.55], [-300, -150]);
-    const message2X = useTransform(scrollYProgress, [0.5, 0.6], ['100%', '0%']);
-    const message2Y = useTransform(scrollYProgress, [0.6, 0.7], [0, 200]);
-    const message1Opacity = useTransform(scrollYProgress, [0.35, 0.45, 0.65], [0, 1, 0]);
+    const message1X = useTransform(scrollYProgress, [0.1, 0.15], [-400, 0]);
+    const message1Y = useTransform(scrollYProgress, [0.15, 0.3], [0, 100]);
+    const message1Opacity = useTransform(scrollYProgress, [0.1, 0.15, 0.35, 0.45], [0, 1,1, 0]);
+
+    const message2X = useTransform(scrollYProgress, [0.5, 0.55], ['100%', '0%']);
+    const message2Y = useTransform(scrollYProgress, [0.55, 0.7], [0, 100]);
     const message2Opacity = useTransform(scrollYProgress, [0.5, 0.6, 0.9], [0, 1, 0]);
 
     // Step 4: Final section scroll for call to action
@@ -56,12 +57,12 @@ const ScrollElement = () => {
             {/* Step 2: Second Image fades in */}
             <motion.div 
                 style={{ opacity: secondImageOpacity }}
-                className="w-full h-screen fixed top-0 left-0"
+                className="w-full h-screen fixed top-0 left-0  mix-blend-plus-lighter"
             >
                 <motion.img 
-                    src="/heat_map_2.jpg" 
+                    src="/heat_map.webp" 
                     alt="Fading Image"
-                    className="w-screen h-screen object-cover object-[25%]"
+                    className="w-screen h-screen object-cover"
                 />
             </motion.div>
 
@@ -69,15 +70,15 @@ const ScrollElement = () => {
             <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center">
                 <motion.div 
                     style={{ x: message1X, opacity: message1Opacity, y: message1Y }} 
-                    className="absolute text-white text-xl left-4 bg-black/60 py-6 rounded px-5"
+                    className="absolute text-white text-xl left-4 bg-black/60 py-6 rounded px-5 w-[90vw]"
                 >
-                    Key message 1
+                    Your Green Cube protects a cubic meter of rainforest in a critical passage of the COBIGA wildlife corridor.
                 </motion.div>
                 <motion.div 
                     style={{ x: message2X, opacity: message2Opacity, y: message2Y }} 
-                    className="absolute text-white text-xl right-4  bg-black/60 py-6 rounded px-5"
+                    className="absolute text-white text-xl right-4  bg-black/60 py-6 rounded px-5 w-[90vw]"
                 >
-                    Key message 2
+                    The corridor connects two of Costa Rica’s oldest National parks, in one of the richest biodiversity hot spots on earth.
                 </motion.div>
             </div>
 
