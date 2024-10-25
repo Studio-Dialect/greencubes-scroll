@@ -1,7 +1,9 @@
+'use client'
 import { HiDownload } from "react-icons/hi";
 import { toJpeg } from 'html-to-image';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Image from 'next/image'; // Import Next.js Image
+import { sendEvent } from '../../../utils/analytics';
 
 export default function Certificate({ userName }) {
     const certificateRef = useRef(); // Reference to the certificate element
@@ -11,6 +13,12 @@ export default function Certificate({ userName }) {
         if (certificateRef.current === null) {
             return;
         }
+
+        sendEvent({
+            action: 'certificate_downloaded',
+            value: "Certificate Downloaded",
+        });
+
         toJpeg(certificateRef.current, { quality: 0.95 })
             .then((dataUrl) => {
                 const link = document.createElement('a');

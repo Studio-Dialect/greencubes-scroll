@@ -5,6 +5,8 @@ import "@egjs/view360/css/view360.min.css";
 import "@egjs/view360/css/control-bar.min.css";
 import Image from 'next/image';
 import { IoIosArrowDown } from "react-icons/io";
+import { motion } from 'framer-motion';
+import { sendEvent } from '../../../utils/analytics';
 
 
 const Video360Player = () => {
@@ -44,6 +46,7 @@ const Video360Player = () => {
     useEffect(() => {
         // Initialize the viewer without gyro by default
         initializeViewer(false);
+        
 
         // Clean up the viewer when the component is unmounted
         return () => {
@@ -54,7 +57,6 @@ const Video360Player = () => {
     }, []);
 
     const handleGyroPermission = async () => {
-        console.log('clicked!')
         const shouldQueryPermission = DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function";
         if (shouldQueryPermission) {
             try {
@@ -67,8 +69,16 @@ const Video360Player = () => {
                     // Reinitialize the viewer with gyro enabled
                     initializeViewer(true);
                     console.log('Gyro permission granted and viewer reinitialized with gyro');
+                    sendEvent({
+                        action: 'gyro_click',
+                        value: "Gyro Permissions Allowed",
+                    });
                 } else {
                     console.log('Gyro permission denied');
+                    sendEvent({
+                        action: 'gyro_denied',
+                        value: "Gyro Permissions Allowed",
+                    });
                 }
             } catch (error) {
                 console.log('Error requesting gyro permission:', error);
@@ -96,7 +106,11 @@ const Video360Player = () => {
 
             {/* Show an overlay button if gyro permission is required */}
             {showGyroButton && !gyroEnabled && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 z-30">
+                <motion.div 
+                initial={{opacity: 0}}
+                animate={{opacity: 1}}
+                transition={{duration: 1, delay: 0.5}}
+                className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 z-30">
                     <Image
                         src="/look-around.svg"
                         alt="Look Around"
@@ -110,9 +124,9 @@ const Video360Player = () => {
                     >
                         Enable Gyroscope
                     </button>
-                </div>
+                </motion.div>
             )}
-            <div className="absolute bottom-0 left-0 w-full h-[86vh] inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparentm pointer-events-none">
+            <div className="absolute bottom-0 left-0 w-full h-[86vh] inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparentm po">
                 <div className='animate animate-pulse bg-black/60 border border-white rounded-full p-3'><IoIosArrowDown />
                 </div>
             </div>

@@ -7,6 +7,7 @@ import ScrollElement from './components/ScrollElement';
 import Image from 'next/image';
 import AmablePoster from './components/AmablePoster';
 import Video360Player from './components/Video360Player';
+import { sendEvent } from '../../utils/analytics';
 
 //const Video360Player = dynamic(() => import('./components/Video360Player'), { ssr: false });
 
@@ -24,10 +25,18 @@ export default function Home() {
     }
     setBtnVisible(false);
 
+    sendEvent({
+      action: 'explore_click',
+      value: "Explore",
+    });
+
     setTimeout(() => {
       setShowAmablePoster(true); // Hide AmablePoster after Video360Player loads
-      
-    }, 10000);
+    }, 9000);
+    setTimeout(() => {
+      setShowVideo360(true);
+      setShowAmablePoster(false);
+    }, 11500);
   };
 
   useEffect(() => {
@@ -48,7 +57,8 @@ export default function Home() {
      // Show AmablePoster
 
     setShowAmablePoster(false);
-    setShowVideo360(true);
+    
+    console.log('videoended')
     setTimeout(() => {
        // Hide AmablePoster after Video360Player loads
       // Set showVideo360 after showing AmablePoster
@@ -66,7 +76,7 @@ export default function Home() {
       <motion.div
         className="fixed inset-0 flex items-center justify-center bg-black z-0"
         initial={{ opacity: 1 }}
-        animate={showMainVideo ? { opacity: 1 } : { opacity: 1}}
+        animate={showMainVideo ? { opacity: 1 } : { opacity: 0}}
         transition={{ duration: 1 }}
       >
         <video
@@ -100,7 +110,7 @@ export default function Home() {
           className="w-full h-[90vh] relative z-10"
           initial={{ opacity: 0 }}
           animate={showVideo360 ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, delay: 1 }}
         >
           <Video360Player onLoadedData={handleVideo360Loaded} />
         </motion.div>
@@ -112,7 +122,7 @@ export default function Home() {
           className="relative z-0"
           initial={{ opacity: 0 }}
           animate={showVideo360 ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 1, delay: 1 }}
         >
           <ScrollElement />
         </motion.div>

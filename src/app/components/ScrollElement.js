@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRouter } from 'next/navigation';
+import { sendEvent } from '../../../utils/analytics';
 
 const ScrollElement = () => {
     const { scrollYProgress } = useScroll();
@@ -36,6 +37,10 @@ const ScrollElement = () => {
 
     // Handle form submission
     const handleSubmit = (e) => {
+        sendEvent({
+            action: 'form_submit',
+            value: "Form Submit",
+        });
         e.preventDefault();
         // Manually construct the URL with query parameters
         router.push(`/certificate?name=${encodeURIComponent(userName)}`);

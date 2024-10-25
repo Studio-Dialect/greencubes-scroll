@@ -11,6 +11,7 @@
   "dependencies": {
     "@egjs/react-view360": "^3.0.4",
     "@egjs/view360": "^4.0.0-beta.7",
+    "@next/third-parties": "^15.0.1",
     "aframe-react": "^4.4.0",
     "framer-motion": "^11.11.9",
     "html-to-image": "^1.11.11",
