@@ -105,7 +105,7 @@ export default function Certificate({ userName }) {
                     <div className="text-center mt-4 px-6">
                         <h2 className="text-black text-3xl font-bold">1 Green Cube</h2>
                         <p className="text-black mt-1 text-xs">Amable forest, Costa Rica</p>
-                        <p className="text-black text-xs">8°42'22"N, 83°10'54"W</p>
+                        <p className="text-black text-xs">8&#176;42&#39;22&#34;N, 83&#176;10&#39;54&#34;W</p>
                         <p className="text-gray-700 mt-4 text-xs text-left">
                             Thank you for your support in helping secure our planet's environment and biodiversity abundance.
                         </p>
