@@ -53,6 +53,7 @@ export default function Certificate({ userName }) {
                 
             await htmlToImage.toJpeg(certificateRef.current, { quality: 0.95 });
             await htmlToImage.toJpeg(certificateRef.current, { quality: 0.95 });
+            await htmlToImage.toJpeg(certificateRef.current, { quality: 0.95 });
 
             const dataUrl = await htmlToImage.toJpeg(certificateRef.current, { quality: 0.95 });
 
@@ -77,73 +78,74 @@ export default function Certificate({ userName }) {
 
     return (
         <>
+        <div className="relative overflow-hidden">
+        <div className="background-diagonal"></div>
         {/* Certificate Section */}
-        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 shadow px-5 pt-4" ref={certificateRef}> {/* Add ref here */}
+        <div className="h-full flex flex-col justify-start items-center bg-transparent shadow px-5 pt-4" ref={certificateRef}>
             <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
                 {/* Header */}
                 <div className="relative bg-gradient-to-r from-green-400 to-yellow-300 bg-cover w-full h-36 rounded-t-none rounded-b-[100%] flex items-center justify-center mt-[-4vh]">
-                    <Image
+                    <img
                         src="/greencubes-logo.svg"
                         alt="Green Cube"
-                        width={200}
-                        height={80}
-                        className="w-full h-16 px-12 mt-[-1.5vh]"
-                        priority
+                        style={{ width: '100%', height: '4rem', padding: '0 3rem', marginTop: '-1.5vh' }}
                     />
                 </div>
-        
+
                 {/* Main Content */}
                 <div className="relative mt-[-7vh] z-10">
                     <div className="flex justify-center">
-                    <Image
-                        src="/cube-image.jpg"
-                        alt="Green Cube"
-                        width={128}
-                        height={128}
-                        className="w-32 h-32 object-cover rounded-full"
-                    />
+                        <img
+                            src="/cube-image.jpg"
+                            alt="Green Cube"
+                            style={{ width: '8rem', height: '8rem', objectFit: 'cover', borderRadius: '50%' }}
+                        />
                     </div>
-        
+
                     <div className="text-center mt-4 px-6">
-                    <h2 className="text-3xl font-bold">1 Green Cube</h2>
-                    <p className="mt-1 text-xs">Amable forest, Costa Rica</p>
-                    <p className="text-xs">8&#176;42&#39;22&#34;N, 83&#176;10&#39;54&#34;W</p>
-                    <p className="text-gray-700 mt-4 text-xs text-left">
-                        Thank you for your support in helping secure our planet&#39;s environment and biodiversity abundance.
-                    </p>
-                    <p className="text-gray-900 mt-2 italic text-xl">{userName}</p>
-                    <p className="text-gray-700 mt-2 text-xs text-left">
-                        Protecting one cubic meter of tropical rainforest and supporting the expansion of the COBIGA biodiversity corridor.
-                    </p>
-                    <p className="text-gray-700 mt-2 text-right text-xs pr-4">1 Jan 2025 - 31 Dec 2025</p>
+                        <h2 className="text-black text-3xl font-bold">1 Green Cube</h2>
+                        <p className="text-black mt-1 text-xs">Amable forest, Costa Rica</p>
+                        <p className="text-black text-xs">8°42'22"N, 83°10'54"W</p>
+                        <p className="text-gray-700 mt-4 text-xs text-left">
+                            Thank you for your support in helping secure our planet's environment and biodiversity abundance.
+                        </p>
+                        <p className="text-gray-900 mt-2 italic text-xl">{userName}</p>
+                        <p className="text-gray-700 mt-2 text-xs text-left">
+                            Protecting one cubic meter of tropical rainforest and supporting the expansion of the COBIGA biodiversity corridor.
+                        </p>
+                        <p className="text-gray-700 mt-2 text-right text-xs pr-4">1 Jan 2025 - 31 Dec 2025</p>
                     </div>
-        
+
                     {/* Signature */}
                     <div className="flex justify-left items-left mt-3 px-7">
-                    <Image src="/signature.png" alt="Signature" width={300} height={100} className="w-[40vw]" />
+                        <img src="/signature.png" alt="Signature" style={{ width: '40vw' }} />
                     </div>
-        
+
                     {/* Footer */}
                     <div className="flex justify-between items-center mt-2 mb-5 px-[13vw]">
-                    <Image src="/hexagon-logo.svg" alt="Hexagon Logo" width={200} height={200} className="w-[25vw]" />
+                        <img src="/hexagon-logo.svg" alt="Hexagon Logo" style={{ width: '25vw' }} />
                     </div>
                 </div>
             </div>
+
+            {/* Seal */}
             <div className="flex justify-end items-center mt-[-8vh] mb-5 pr-6 w-full">
-                <Image src="/seal.png" alt="Hexagon Seal" width={150} height={150} className="w-[35vw]" />
+                <img src="/seal.png" alt="Hexagon Seal" style={{ width: '30vw' }} />
             </div>
         </div>
+        </div>
+
         {/* Download Section */}
-        <div className="relative w-full min-h-screen bg-[#0c1b2b]">
+        <div className="relative w-full bg-[#0c1b2b]">
         {/* Background Image */}
-        <div className="absolute top-0 left-0 w-full h-full bg-cover bg-no-repeat bg-center"
+        <div className="absolute top-0 left-0 w-full h-screen bg-cover bg-no-repeat bg-center"
             style={{ backgroundImage: "url('/certificate-bg.jpg')" }}></div>
 
         {/* Dark Overlay to make text more readable */}
-        <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50"></div>
+        <div className="absolute top-0 left-0 w-full h-screen bg-black bg-opacity-50"></div>
 
         {/* Main Content */}
-        <div className="relative z-10 flex flex-col items-center justify-around h-screen space-y-16">
+        <div className="relative z-10 flex flex-col items-center justify-between pt-[4vh] pb-[6vh] h-screen space-y-16">
 
             {/* Download Button Section */}
             <div className="text-center">
@@ -156,14 +158,14 @@ export default function Certificate({ userName }) {
             </div>
             <div>
             {/* Corporate Sponsorship Section */}
-            <div className="text-left">
-            <p className="text-white text-xl font-semibold">Interested in Corporate <br/> Sponsorship?</p>
-            <button className="mt-4 px-8 py-3 bg-lime-500 text-black font-semibold text-lg rounded-lg w-full">Learn more</button>
+            <div className="text-center">
+            <p className="text-white  font-semibold">Interested in Corporate Sponsorship?</p>
+            <button className="mt-3 px-8 py-2 bg-lime-500 text-black font-semibold text-lg rounded-lg w-full">Learn more</button>
             </div>
 
             {/* Footer Section with Full Logo Image */}
-            <div className="mt-12">
-            <Image src="/greencubes-logo-white.svg" alt="Green Cubes Footer" width={288} height={96} className="w-72"/>
+            <div className="mt-8">
+            <Image src="/greencubes-logo-white.svg" alt="Green Cubes Footer" width={288} height={96} className="w-80"/>
             </div>
             </div>
         </div>

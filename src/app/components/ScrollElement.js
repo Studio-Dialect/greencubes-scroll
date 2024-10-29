@@ -23,12 +23,10 @@ const ScrollElement = () => {
     const secondImageOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.4], [0, 0.4, 0.4]);
 
     // Step 3: Key messages animation (slide in)
-    const message1X = useTransform(scrollYProgress, [0.05, 0.1], [-400, 0]);
-    const message1Y = useTransform(scrollYProgress, [0.15, 0.3], [0, 100]);
+    const message1X = useTransform(scrollYProgress, [0.05, 0.1, 0.25, 0.35], ['100%', '0%', '0%', '-100%']);
     const message1Opacity = useTransform(scrollYProgress, [0.05, 0.1, 0.25, 0.35], [0, 1,1, 0]);
 
     const message2X = useTransform(scrollYProgress, [0.4, 0.45], ['100%', '0%']);
-    const message2Y = useTransform(scrollYProgress, [0.45, 0.6], [0, 100]);
     const message2Opacity = useTransform(scrollYProgress, [0.4, 0.45, 0.7, 0.8], [0, 1, 1, 0]);
 
     // Step 4: Final section scroll for call to action
@@ -75,15 +73,15 @@ const ScrollElement = () => {
             </motion.div>
 
             {/* Step 3: Key messages slide in */}
-            <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center">
+            <div className="fixed top-0 left-0 w-full h-screen flex items-end justify-center pb-[10vh]">
                 <motion.div 
-                    style={{ x: message1X, opacity: message1Opacity, y: message1Y }} 
+                    style={{ x: message1X, opacity: message1Opacity}} 
                     className="absolute text-white text-xl left-4 bg-black/60 py-6 rounded px-5 w-[90vw]"
                 >
                     Your Green Cube protects a cubic meter of rainforest in a critical passage of the COBIGA wildlife corridor.
                 </motion.div>
                 <motion.div 
-                    style={{ x: message2X, opacity: message2Opacity, y: message2Y }} 
+                    style={{ x: message2X, opacity: message2Opacity }} 
                     className="absolute text-white text-xl right-4  bg-black/60 py-6 rounded px-5 w-[90vw]"
                 >
                     The corridor connects two of Costa Rica’s oldest National parks, in one of the richest biodiversity hot spots on earth.

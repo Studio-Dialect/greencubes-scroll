@@ -1,10 +1,11 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import View360, { EquirectProjection, ControlBar } from '@egjs/view360';
 import "@egjs/view360/css/view360.min.css";
 import "@egjs/view360/css/control-bar.min.css";
 import Image from 'next/image';
-import { IoIosArrowDown } from "react-icons/io";
+import { SlArrowDown } from "react-icons/sl";
+import { FaVolumeHigh, FaVolumeXmark } from "react-icons/fa6";
 import { motion } from 'framer-motion';
 import { sendEvent } from '../../../utils/analytics';
 
@@ -13,6 +14,8 @@ const Video360Player = () => {
     const [showGyroButton, setShowGyroButton] = useState(false); // State to show/hide the button
     const [gyroEnabled, setGyroEnabled] = useState(false); // Track if gyro permission is granted
     const [viewer, setViewer] = useState(null); // Store the viewer instance
+    const [volumeOn, setVolumeOn] = useState(false); // Volume controls
+    const audioRef = useRef(null); // Ref for audio element
 
     const initializeViewer = (enableGyro = false) => {
         if (viewer) {
@@ -100,10 +103,30 @@ const Video360Player = () => {
         }
     }, []);
 
+    useEffect(() => {
+        if (audioRef.current) {
+            if (volumeOn) {
+                audioRef.current.play();
+            } else {
+                audioRef.current.pause();
+            }
+        }
+    }, [volumeOn]);
+
+    const handleVolumeClick = () => {
+        setVolumeOn(!volumeOn)
+        console.log('clicked')
+    }
+
     return (
         <div id="viewer" style={{ width: '100%', height: '90vh', backgroundColor: 'black' }} className='relative overflow-hidden'>
             <canvas className="view360-canvas" />
+            <audio ref={audioRef} src="/forestBackground.mp3" loop />
 
+            <div className="absolute top-3 left-3 w-full inset-0 flex flex-col items-start justify-start text-white z-30 bg-transparent">
+                <div className='text-xl bg-black/50 rounded-full border border-white p-2' onClick={handleVolumeClick}>{volumeOn ? <FaVolumeHigh/> : <FaVolumeXmark /> }
+                </div>
+            </div>
             {/* Show an overlay button if gyro permission is required */}
             {showGyroButton && !gyroEnabled && (
                 <motion.div 
@@ -126,8 +149,8 @@ const Video360Player = () => {
                     </button>
                 </motion.div>
             )}
-            <div className="absolute bottom-5 left-0 w-full inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparent pointer-events-none">
-                <div className='animate animate-pulse bg-black/60 border border-white rounded-full p-3'><IoIosArrowDown />
+            <div className="absolute bottom-[7vh] left-0 w-full inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparent pointer-events-none">
+                <div className='text-4xl animate animate-pulse'><SlArrowDown />
                 </div>
             </div>
         </div>

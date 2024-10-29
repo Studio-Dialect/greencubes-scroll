@@ -19,3 +19,18 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.view360-controls-pie {
+  margin: 1em !important;
+}
+
+.background-diagonal {
+  background-color: #040911;
+  width: 165vw;
+  height: 65vh;
+  position: absolute;
+  top: 52vh;
+  left: 0;
+  transform: rotate(-40deg);
+  z-index: -1;
+}

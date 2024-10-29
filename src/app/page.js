@@ -136,7 +136,7 @@ export default function Home() {
         <div className="text-3xl text-white text-center">A CUBIC METER<br/>OF LIFE</div>
         <ExploreBtn onExploreClick={handleExploreClick} />
         <div className="mt-16">
-          <Image src="/greencubes-logo-white.svg" alt="Green Cubes Footer" width={288} height={96} className="w-48" />
+          <Image src="/greencubes-logo-white.svg" alt="Green Cubes Footer" width={288} height={96} className="w-80" />
         </div>
       </motion.div>
     </div>
