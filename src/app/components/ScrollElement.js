@@ -9,34 +9,44 @@ const ScrollElement = () => {
     const [userName, setUserName] = useState(''); // Store the user's name
     const router = useRouter(); // Use Next.js router to navigate to Certificate
 
-     // Image Sequence Setup
-     const totalFrames = 97; // Adjust this based on your number of images
-     const images = Array.from({ length: totalFrames }, (_, i) => `/sequence/zoom_${i + 1}.png`);
-     const frame = useTransform(scrollYProgress, [0, 0.4], [0, totalFrames - 1]);
-     const [currentFrame, setCurrentFrame] = useState(0);
-     const [imagesLoaded, setImagesLoaded] = useState(false); // Track if images are fully loaded
+    const [imagesLoaded, setImagesLoaded] = useState(false);
+    const totalFrames = 97;
+    const images = useRef([]);
+    const canvasRef = useRef(null);
+    const frame = useTransform(scrollYProgress, [0, 0.4], [0, totalFrames - 1]);
 
-     // Preload images function
+    // Preload images in batches
     useEffect(() => {
-        let loadedCount = 0;
-        images.forEach((src, index) => {
-            const img = new Image();
-            img.src = src;
-            img.onload = () => {
-                loadedCount += 1;
-                if (loadedCount === totalFrames) {
-                    setImagesLoaded(true); // Set as loaded when all images are cached
-                }
-            };
-            img.onerror = () => console.error(`Failed to load image: ${src}`);
-        });
-    }, [images]);
+        const loadImages = async () => {
+            let loaded = 0;
+            for (let i = 1; i <= totalFrames; i++) {
+                const img = new Image();
+                img.src = `/sequence/zoom_${i}.png`;
+                img.onload = () => {
+                    loaded++;
+                    if (loaded === totalFrames) setImagesLoaded(true);
+                };
+                images.current.push(img);
+            }
+        };
+        loadImages();
+    }, []);
 
-     // Update the current frame based on scroll position
+    // Use canvas to draw current frame
     useEffect(() => {
-        if (!imagesLoaded) return; // Only track the frame once images are loaded
+        const canvas = canvasRef.current;
+        const context = canvas.getContext("2d");
+
+        const renderFrame = (frame) => {
+            const img = images.current[frame];
+            if (img) {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
+            }
+        };
+
         const unsubscribe = frame.on("change", (latestFrame) => {
-            setCurrentFrame(Math.round(latestFrame));
+            requestAnimationFrame(() => renderFrame(Math.round(latestFrame)));
         });
         return () => unsubscribe();
     }, [frame, imagesLoaded]);
@@ -76,25 +86,18 @@ const ScrollElement = () => {
         <div style={{ height: '1000vh' }} className='bg-black'> {/* Tall container for scrolling */}
             
            {/* Image Sequence */}
-            {imagesLoaded ? (
-                <motion.img
-                    src={images[currentFrame]}
-                    alt="Scroll Sequence"
-                    style={{
-                        position: "fixed",
-                        top: 0,
-                        left: 0,
-                        width: "100vw",
-                        height: "100vh",
-                        objectFit: "cover",
-                    }}
-                    priority 
-                />
-            ) : (
-                <div className="fixed inset-0 flex items-center justify-center text-white">
-                    Loading...
-                </div>
-            )}
+            <canvas
+                ref={canvasRef}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                style={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    width: "100vw",
+                    height: "100vh",
+                }}
+            />
 
             {/* Step 3: Key messages slide in */}
             <div className="fixed top-0 left-0 w-full h-screen flex items-end justify-center">
