@@ -34,21 +34,26 @@ const ScrollElement = () => {
 
     // Use canvas to draw current frame
     useEffect(() => {
-        const canvas = canvasRef.current;
-        const context = canvas.getContext("2d");
+        if (typeof window !== "undefined" && canvasRef.current) {
+            const canvas = canvasRef.current;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
-        const renderFrame = (frame) => {
-            const img = images.current[frame];
-            if (img) {
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                context.drawImage(img, 0, 0, canvas.width, canvas.height);
-            }
-        };
+            const context = canvas.getContext("2d");
 
-        const unsubscribe = frame.on("change", (latestFrame) => {
-            requestAnimationFrame(() => renderFrame(Math.round(latestFrame)));
-        });
-        return () => unsubscribe();
+            const renderFrame = (frame) => {
+                const img = images.current[frame];
+                if (img) {
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                }
+            };
+
+            const unsubscribe = frame.on("change", (latestFrame) => {
+                requestAnimationFrame(() => renderFrame(Math.round(latestFrame)));
+            });
+            return () => unsubscribe();
+        }
     }, [frame, imagesLoaded]);
 
     // Step 3: Key messages animation (slide in)
@@ -88,8 +93,6 @@ const ScrollElement = () => {
            {/* Image Sequence */}
             <canvas
                 ref={canvasRef}
-                width={window.innerWidth}
-                height={window.innerHeight}
                 style={{
                     position: "fixed",
                     top: 0,
