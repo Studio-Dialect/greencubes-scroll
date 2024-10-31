@@ -86,6 +86,7 @@ const ScrollElement = () => {
                     height: "100vh",
                     objectFit: "cover",
                 }}
+                priority 
             />
 
             {/* Step 3: Key messages slide in */}
@@ -95,7 +96,7 @@ const ScrollElement = () => {
                             opacity: message1Opacity,
                             background: message1Bg
                         }} 
-                    className=" absolute text-white text-xl bottom-0 pb-[10vh] left-0 pt-6 px-5 w-full text-left"
+                    className=" absolute text-white text-xl bottom-0 pb-[15vh] left-0 pt-6 px-5 w-full text-left"
                 >
                     Your Green Cube protects a cubic meter of rainforest in a critical passage of the COBIGA wildlife corridor.
                 </motion.div>
@@ -104,7 +105,7 @@ const ScrollElement = () => {
                             opacity: message2Opacity,
                             background: message2Bg
                         }} 
-                    className="absolute text-white text-xl bottom-0 pb-[10vh] left-0 pt-6 px-5 w-full text-left"
+                    className="absolute text-white text-xl bottom-0 pb-[15vh] left-0 pt-6 px-5 w-full text-left"
                 >
                     The corridor connects two of Costa Rica’s oldest National parks, in one of the richest biodiversity hot spots on earth.
                 </motion.div>
@@ -113,7 +114,7 @@ const ScrollElement = () => {
                             opacity: message3Opacity,
                             background: message3Bg 
                         }} 
-                    className="absolute text-white text-xl bottom-0 pb-[10vh] left-0 pt-6 px-5 w-full text-left"
+                    className="absolute text-white text-xl bottom-0 pb-[15vh] left-0 pt-6 px-5 w-full text-left"
                 >
                     enabling animal movement to expand distribution, promote genetic diversity, and increase wildlife resilience.
                 </motion.div>

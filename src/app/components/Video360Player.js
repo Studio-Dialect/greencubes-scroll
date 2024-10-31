@@ -93,13 +93,26 @@ const Video360Player = () => {
     useEffect(() => {
         const storedPermission = localStorage.getItem('gyroPermission');
         const shouldQueryPermission = DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function";
-
+    
         if (storedPermission === 'granted') {
             setGyroEnabled(true); // If permission is already granted, enable gyro
             setShowGyroButton(false); // Hide the button
             initializeViewer(true); // Initialize the viewer with gyro enabled
         } else if (shouldQueryPermission) {
-            setShowGyroButton(true); // Show the button if permission is needed
+            // Show button if permission is needed
+            setShowGyroButton(true);
+        }
+    
+        // Double-check if permission was granted after initializing
+        if (shouldQueryPermission && !storedPermission) {
+            DeviceMotionEvent.requestPermission().then((status) => {
+                if (status === 'granted') {
+                    setGyroEnabled(true);
+                    setShowGyroButton(false);
+                    localStorage.setItem('gyroPermission', 'granted');
+                    initializeViewer(true); // Reinitialize with gyro if permission granted
+                }
+            }).catch(error => console.log("Error re-checking gyro permission:", error));
         }
     }, []);
 
