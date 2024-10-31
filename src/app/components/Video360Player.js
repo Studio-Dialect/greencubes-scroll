@@ -65,13 +65,12 @@ const Video360Player = () => {
             try {
                 const permissionStatus = await DeviceMotionEvent.requestPermission();
                 if (permissionStatus === 'granted') {
-                    setGyroEnabled(true); // Update state to reflect gyro permission granted
-                    setShowGyroButton(false); // Hide the button
-                    localStorage.setItem('gyroPermission', 'granted'); // Persist gyro permission state
-
-                    // Reinitialize the viewer with gyro enabled
-                    initializeViewer(true);
-                    console.log('Gyro permission granted and viewer reinitialized with gyro');
+                    setGyroEnabled(true);
+                    setShowGyroButton(false);
+                    localStorage.setItem('gyroPermission', 'granted'); // Store permission status for session
+    
+                    initializeViewer(true); // Reinitialize with gyro enabled
+                    console.log('Gyro permission granted');
                     sendEvent({
                         action: 'gyro_click',
                         value: "Gyro Permissions Allowed",
@@ -80,7 +79,7 @@ const Video360Player = () => {
                     console.log('Gyro permission denied');
                     sendEvent({
                         action: 'gyro_denied',
-                        value: "Gyro Permissions Allowed",
+                        value: "Gyro Permissions Denied",
                     });
                 }
             } catch (error) {
@@ -89,32 +88,22 @@ const Video360Player = () => {
         }
     };
 
-    // Check local storage for gyro permission on initial load
+    // Check local storage and request permission as necessary
     useEffect(() => {
         const storedPermission = localStorage.getItem('gyroPermission');
         const shouldQueryPermission = DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function";
-    
+
         if (storedPermission === 'granted') {
-            setGyroEnabled(true); // If permission is already granted, enable gyro
-            setShowGyroButton(false); // Hide the button
-            initializeViewer(true); // Initialize the viewer with gyro enabled
+            // Try to initialize with gyro if previously granted
+            setGyroEnabled(true);
+            setShowGyroButton(false);
+            initializeViewer(true);
         } else if (shouldQueryPermission) {
-            // Show button if permission is needed
+            // Show button to request permission if it's a fresh session
             setShowGyroButton(true);
         }
-    
-        // Double-check if permission was granted after initializing
-        if (shouldQueryPermission && !storedPermission) {
-            DeviceMotionEvent.requestPermission().then((status) => {
-                if (status === 'granted') {
-                    setGyroEnabled(true);
-                    setShowGyroButton(false);
-                    localStorage.setItem('gyroPermission', 'granted');
-                    initializeViewer(true); // Reinitialize with gyro if permission granted
-                }
-            }).catch(error => console.log("Error re-checking gyro permission:", error));
-        }
     }, []);
+
 
     useEffect(() => {
         if (audioRef.current) {

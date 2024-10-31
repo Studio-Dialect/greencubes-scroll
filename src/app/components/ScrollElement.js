@@ -9,36 +9,37 @@ const ScrollElement = () => {
     const [userName, setUserName] = useState(''); // Store the user's name
     const router = useRouter(); // Use Next.js router to navigate to Certificate
 
-    {/* 
-    // Step 1: Zoom out the first image from scale 10 to 1, hold scale at 1
-    const scale = useTransform(scrollYProgress, [0, 0.3, 0.6], [6, 3, 1]);
-    const secondScale = useTransform(scrollYProgress, [0.3, 0.6], [3, 1]);
+     // Image Sequence Setup
+     const totalFrames = 97; // Adjust this based on your number of images
+     const images = Array.from({ length: totalFrames }, (_, i) => `/sequence/zoom_${i + 1}.png`);
+     const frame = useTransform(scrollYProgress, [0, 0.4], [0, totalFrames - 1]);
+     const [currentFrame, setCurrentFrame] = useState(0);
+     const [imagesLoaded, setImagesLoaded] = useState(false); // Track if images are fully loaded
 
-    // Adjust the object position for the first image to keep it centered
-    const objectPositionY = useTransform(scrollYProgress, [0, 0.6], [-300, 0]);
-    const objectPositionX = useTransform(scrollYProgress, [0, 0.6], [-230, 0]);
-    
-
-    // Step 2: Opacity transition for first and second image
-    const firstImageOpacity = useTransform(scrollYProgress, [0.2, 0.3, 0.4], [1, 1, 1]);
-    const secondImageOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.4], [0, 0.4, 0.4]);
-*/}
-
-
-    // Image Sequence Setup
-    const totalFrames = 97; // Adjust this based on your number of images
-    const images = Array.from({ length: totalFrames }, (_, i) => `/sequence/zoom_${i + 1}.png`);
-    const frame = useTransform(scrollYProgress, [0, 0.4], [0, totalFrames - 1]);
-    const [currentFrame, setCurrentFrame] = useState(0);
-
-    // Update the current frame based on scroll position
+     // Preload images function
     useEffect(() => {
+        let loadedCount = 0;
+        images.forEach((src, index) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => {
+                loadedCount += 1;
+                if (loadedCount === totalFrames) {
+                    setImagesLoaded(true); // Set as loaded when all images are cached
+                }
+            };
+            img.onerror = () => console.error(`Failed to load image: ${src}`);
+        });
+    }, [images]);
+
+     // Update the current frame based on scroll position
+    useEffect(() => {
+        if (!imagesLoaded) return; // Only track the frame once images are loaded
         const unsubscribe = frame.on("change", (latestFrame) => {
             setCurrentFrame(Math.round(latestFrame));
         });
         return () => unsubscribe();
-    }, [frame]);
-
+    }, [frame, imagesLoaded]);
 
     // Step 3: Key messages animation (slide in)
     const message1X = useTransform(scrollYProgress, [0.05, 0.08, 0.15, 0.2], ['100%', '0%', '0%', '-100%']);
@@ -75,19 +76,25 @@ const ScrollElement = () => {
         <div style={{ height: '1000vh' }} className='bg-black'> {/* Tall container for scrolling */}
             
            {/* Image Sequence */}
-            <motion.img
-                src={images[currentFrame]}
-                alt="Scroll Sequence"
-                style={{
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    width: "100vw",
-                    height: "100vh",
-                    objectFit: "cover",
-                }}
-                priority 
-            />
+            {imagesLoaded ? (
+                <motion.img
+                    src={images[currentFrame]}
+                    alt="Scroll Sequence"
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100vh",
+                        objectFit: "cover",
+                    }}
+                    priority 
+                />
+            ) : (
+                <div className="fixed inset-0 flex items-center justify-center text-white">
+                    Loading...
+                </div>
+            )}
 
             {/* Step 3: Key messages slide in */}
             <div className="fixed top-0 left-0 w-full h-screen flex items-end justify-center">
