@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffec, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRouter } from 'next/navigation';
 import { sendEvent } from '../../../utils/analytics';
