@@ -60,6 +60,7 @@ const Video360Player = () => {
     }, []);
 
     const handleGyroPermission = async () => {
+        setVolumeOn(true);
         const shouldQueryPermission = DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function";
         if (shouldQueryPermission) {
             try {
