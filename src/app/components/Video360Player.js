@@ -89,20 +89,33 @@ const Video360Player = () => {
     };
 
     // Check local storage and request permission as necessary
-    useEffect(() => {
-        const storedPermission = localStorage.getItem('gyroPermission');
-        const shouldQueryPermission = DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function";
+useEffect(() => {
+    const storedPermission = localStorage.getItem('gyroPermission');
+    const shouldQueryPermission = DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function";
 
-        if (storedPermission === 'granted') {
-            // Try to initialize with gyro if previously granted
-            setGyroEnabled(true);
-            setShowGyroButton(false);
-            initializeViewer(true);
-        } else if (shouldQueryPermission) {
-            // Show button to request permission if it's a fresh session
-            setShowGyroButton(true);
-        }
-    }, []);
+    // Reset gyro state on mount to handle fresh sessions
+    setGyroEnabled(false);
+    
+    // If permission was granted in previous session, attempt to initialize with gyro
+    if (storedPermission === 'granted') {
+        DeviceMotionEvent.requestPermission().then((status) => {
+            if (status === 'granted') {
+                setGyroEnabled(true);
+                setShowGyroButton(false);
+                initializeViewer(true);
+            } else {
+                setShowGyroButton(true); // Show button if permission is denied or revoked
+            }
+        }).catch(error => {
+            console.log("Error re-checking gyro permission:", error);
+            setShowGyroButton(true); // Show button if an error occurs
+        });
+    } else if (shouldQueryPermission) {
+        // Show button if permission is required and hasn't been requested yet
+        setShowGyroButton(true);
+    }
+}, []);
+
 
 
     useEffect(() => {
