@@ -10,10 +10,10 @@ const ScrollElement = () => {
     const router = useRouter(); // Use Next.js router to navigate to Certificate
 
     const [imagesLoaded, setImagesLoaded] = useState(false);
-    const totalFrames = 97;
+    const totalFrames = 138;
     const images = useRef([]);
     const canvasRef = useRef(null);
-    const frame = useTransform(scrollYProgress, [0, 0.4], [0, totalFrames - 1]);
+    const frame = useTransform(scrollYProgress, [0, 0.45], [0, totalFrames - 1]);
 
     // Preload images in batches
     useEffect(() => {
@@ -21,7 +21,7 @@ const ScrollElement = () => {
             let loaded = 0;
             for (let i = 1; i <= totalFrames; i++) {
                 const img = new Image();
-                img.src = `/sequence/zoom_${i}.png`;
+                img.src = `/sequence/zoom_${i}.jpg`;
                 img.onload = () => {
                     loaded++;
                     if (loaded === totalFrames) setImagesLoaded(true);
