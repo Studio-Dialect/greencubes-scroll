@@ -8,6 +8,8 @@ const ScrollElement = () => {
     const { scrollYProgress } = useScroll();
     const [userName, setUserName] = useState(''); // Store the user's name
     const router = useRouter(); // Use Next.js router to navigate to Certificate
+    const [status, setStatus] = useState(null);
+    const [error, setError] = useState(null);
 
     const [imagesLoaded, setImagesLoaded] = useState(false);
     const totalFrames = 138;
@@ -77,14 +79,31 @@ const ScrollElement = () => {
 
 
     // Handle form submission
-    const handleSubmit = (e) => {
-        sendEvent({
-            action: 'form_submit',
-            value: "Form Submit",
-        });
-        e.preventDefault();
-        // Manually construct the URL with query parameters
-        router.push(`/certificate?name=${encodeURIComponent(userName)}`);
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        sendEvent({ action: 'form_submit', value: "Form Submit" });
+        
+        try {
+            setStatus('pending');
+            setError(null);
+            const myForm = event.target;
+            const formData = new FormData(myForm);
+            const res = await fetch('/__forms.html', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(formData).toString(),
+            });
+            if (res.status === 200) {
+                setStatus('ok');
+                router.push(`/certificate?name=${encodeURIComponent(userName)}`);
+            } else {
+                setStatus('error');
+                setError(`${res.status} ${res.statusText}`);
+            }
+        } catch (e) {
+            setStatus('error');
+            setError(`${e}`);
+        }
     };
 
     return (
@@ -141,6 +160,7 @@ const ScrollElement = () => {
                 <div className="text-center text-white flex flex-col items-between justify-around h-full px-12">
                     <h1 className="text-4xl capitalize font-semibold">ACTIVATE YOUR GREEN CUBE</h1>
                     <form name='Sign Up' className="mt-4 space-y-4 flex flex-col justify-center items-center px-5" onSubmit={handleSubmit} netlify>
+                    <input type="hidden" name="form-name" value="Sign Up" />
                         <input 
                             type="text" 
                             name='name'
