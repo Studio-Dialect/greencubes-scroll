@@ -109,16 +109,16 @@ const ScrollElement = () => {
                             opacity: message1Opacity,
                             background: message1Bg
                         }} 
-                    className=" absolute text-white text-xl bottom-0 pb-[15vh] left-0 pt-6 px-5 w-full text-left"
+                    className=" absolute text-white text-[1.4em] bottom-0 pb-[15vh] left-0 pt-6 px-5 w-full text-left"
                 >
-                    Your Green Cube protects a cubic meter of rainforest in a critical passage of the COBIGA wildlife corridor.
+                    Your Green Cube protects a cubic meter of rainforest in a critical passage of the COBIGA wildlife corridor in Costa Rica.
                 </motion.div>
                 <motion.div 
                     style={{ x: message2X, 
                             opacity: message2Opacity,
                             background: message2Bg
                         }} 
-                    className="absolute text-white text-xl bottom-0 pb-[15vh] left-0 pt-6 px-5 w-full text-left"
+                    className="absolute text-white text-[1.4em] bottom-0 pb-[15vh] left-0 pt-6 px-5 w-full text-left"
                 >
                     The corridor connects two of Costa Rica’s oldest National parks, in one of the richest biodiversity hot spots on earth.
                 </motion.div>
@@ -127,7 +127,7 @@ const ScrollElement = () => {
                             opacity: message3Opacity,
                             background: message3Bg 
                         }} 
-                    className="absolute text-white text-xl bottom-0 pb-[15vh] left-0 pt-6 px-5 w-full text-left"
+                    className="absolute text-white text-[1.4em] bottom-0 pb-[15vh] left-0 pt-6 px-5 w-full text-left"
                 >
                     enabling animal movement to expand distribution, promote genetic diversity, and increase wildlife resilience.
                 </motion.div>
@@ -140,9 +140,10 @@ const ScrollElement = () => {
             >
                 <div className="text-center text-white flex flex-col items-between justify-around h-full px-12">
                     <h1 className="text-4xl capitalize font-semibold">ACTIVATE YOUR GREEN CUBE</h1>
-                    <form className="mt-4 space-y-4 flex flex-col justify-center items-center px-5" onSubmit={handleSubmit}>
+                    <form name='Sign Up' className="mt-4 space-y-4 flex flex-col justify-center items-center px-5" onSubmit={handleSubmit} netlify>
                         <input 
                             type="text" 
+                            name='name'
                             placeholder="Name" 
                             className="block w-full p-2 bg-zinc-900 text-white rounded px-4"
                             value={userName}
@@ -150,9 +151,38 @@ const ScrollElement = () => {
                         />
                         <input 
                             type="email" 
+                            name='email'
                             placeholder="Email" 
                             className="block w-full p-2 bg-zinc-900 text-white rounded px-4"
                         />
+                        <div className="flex gap-2 w-full">
+                        <input type="checkbox" id="checkbox" name="checkbox" className="
+                            relative peer shrink-0
+                            appearance-none w-4 h-4 border-2 border-lime-500 rounded-sm bg-white
+                            mt-1
+                            checked:bg-lime-500 checked:border-0
+                            focus:outline-none focus:ring-offset-0 focus:ring-2 focus:ring-lime-100
+                            disabled:border-steel-400 disabled:bg-steel-400
+                            "
+                        />
+                            <label htmlFor="checkbox" className='text-left'>Send me details on enterprise sponsorship options.</label>
+                            <svg
+                                className="
+                                absolute 
+                                w-4 h-4 mt-1
+                                hidden peer-checked:block
+                                pointer-events-none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="4"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
                         <button 
                             type="submit" 
                             className="w-full p-2 bg-lime-500 hover:bg-green-500 text-white text-lg rounded"

@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 import Image from 'next/image'; // Import Next.js Image
 import { sendEvent } from '../../../utils/analytics';
 import * as htmlToImage from 'html-to-image';
+import Link from "next/link";
 
 
 export default function Certificate({ userName }) {
@@ -75,6 +76,12 @@ export default function Certificate({ userName }) {
             }
         };
     
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+        });
 
     return (
         <>
@@ -117,8 +124,9 @@ export default function Certificate({ userName }) {
                     </div>
 
                     {/* Signature */}
-                    <div className="flex justify-left items-left mt-3 px-7">
+                    <div className="flex flex-col justify-left items-left mt-3 px-7">
                         <img src="/signature.png" alt="Signature" style={{ width: '40vw' }} />
+                        <div className="text-[0.5em] mt-[-5px] mb-2 ml-[22vw]">{formattedDate}</div>
                     </div>
 
                     {/* Footer */}
@@ -160,7 +168,7 @@ export default function Certificate({ userName }) {
             {/* Corporate Sponsorship Section */}
             <div className="text-center">
             <p className="text-white  font-semibold">Interested in Corporate Sponsorship?</p>
-            <button className="mt-3 px-8 py-2 bg-lime-500 text-black font-semibold text-lg rounded-lg w-full">Learn more</button>
+            <Link href='https://r-evolution.com/r-initiatives/forest'><button className="mt-3 px-8 py-2 bg-lime-500 text-black font-semibold text-lg rounded-lg w-full">Learn more</button></Link>
             </div>
 
             {/* Footer Section with Full Logo Image */}
