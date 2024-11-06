@@ -32,11 +32,11 @@ export default function Home() {
 
     setTimeout(() => {
       setShowAmablePoster(true); // Hide AmablePoster after Video360Player loads
-    }, 9000);
+    }, 10000);
     setTimeout(() => {
       setShowVideo360(true);
       setShowAmablePoster(false);
-    }, 11500);
+    }, 12500);
   };
 
   useEffect(() => {
@@ -81,11 +81,11 @@ export default function Home() {
       >
         <video
           ref={videoRef}
-          src="/Intro_flight.mp4"
+          src="/intro-flight.mp4"
           className="w-full max-w-3xl"
           muted
           playsInline
-          poster="/intro_poster.png"
+          poster="/intro-flight.jpg"
         />
       </motion.div>
 

@@ -9,49 +9,47 @@ import { FaVolumeHigh, FaVolumeXmark } from "react-icons/fa6";
 import { motion } from 'framer-motion';
 import { sendEvent } from '../../../utils/analytics';
 
-
 const Video360Player = () => {
-    const [showGyroButton, setShowGyroButton] = useState(false); // State to show/hide the button
-    const [gyroEnabled, setGyroEnabled] = useState(false); // Track if gyro permission is granted
-    const [viewer, setViewer] = useState(null); // Store the viewer instance
-    const [volumeOn, setVolumeOn] = useState(false); // Volume controls
-    const audioRef = useRef(null); // Ref for audio element
+    const [showGyroButton, setShowGyroButton] = useState(false);
+    const [gyroEnabled, setGyroEnabled] = useState(false);
+    const [viewer, setViewer] = useState(null);
+    const [volumeOn, setVolumeOn] = useState(false);
+    const audioRef = useRef(null);
+    const playerRef = useRef(null);
 
     const initializeViewer = (enableGyro = false) => {
         if (viewer) {
-            viewer.destroy(); // Destroy existing viewer if any
+            viewer.destroy();
         }
 
         const newViewer = new View360('#viewer', {
             projection: new EquirectProjection({
-                src: '/360Cam_sm.mp4', // Path to your 360 video
+                src: '/360Cam_sm.mp4',
                 video: {
                     autoplay: true,
                     muted: true,
                 },
             }),
-            gyro: enableGyro, // Enable gyro if permission is granted
+            gyro: enableGyro,
             zoom: false,
             plugins: [
                 new ControlBar({
                     gyroButton: false,
                     showBackground: false,
                     progressBar: false,
-                    videoTime: false, 
+                    videoTime: false,
                     volumeButton: false,
                 }),
             ],
         });
 
-        setViewer(newViewer); // Store the new viewer instance
+        setViewer(newViewer);
     };
 
     useEffect(() => {
-        // Initialize the viewer without gyro by default
         initializeViewer(false);
-        
 
-        // Clean up the viewer when the component is unmounted
+        // Clean up viewer when the component is unmounted
         return () => {
             if (viewer) {
                 viewer.destroy();
@@ -59,8 +57,41 @@ const Video360Player = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (audioRef.current) {
+            volumeOn ? audioRef.current.play() : audioRef.current.pause();
+        }
+    }, [volumeOn]);
+
+    useEffect(() => {
+        const handleIntersection = (entries) => {
+            entries.forEach(entry => {
+                if (audioRef.current) {
+                    if (entry.isIntersecting) {
+                        volumeOn && audioRef.current.play(); // Play if in view and volume is on
+                    } else {
+                        audioRef.current.pause(); // Pause if out of view
+                    }
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(handleIntersection, {
+            threshold: 0.1, // Adjust based on when you want to pause the audio (e.g., 0.1 for 10% visibility)
+        });
+
+        if (playerRef.current) {
+            observer.observe(playerRef.current);
+        }
+
+        return () => {
+            if (playerRef.current) {
+                observer.unobserve(playerRef.current);
+            }
+        };
+    }, [volumeOn]);
+
     const handleGyroPermission = async () => {
-        setVolumeOn(true);
         const shouldQueryPermission = DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function";
         if (shouldQueryPermission) {
             try {
@@ -68,16 +99,13 @@ const Video360Player = () => {
                 if (permissionStatus === 'granted') {
                     setGyroEnabled(true);
                     setShowGyroButton(false);
-                    localStorage.setItem('gyroPermission', 'granted'); // Store permission status for session
-    
-                    initializeViewer(true); // Reinitialize with gyro enabled
-                    console.log('Gyro permission granted');
+                    localStorage.setItem('gyroPermission', 'granted');
+                    initializeViewer(true);
                     sendEvent({
                         action: 'gyro_click',
                         value: "Gyro Permissions Allowed",
                     });
                 } else {
-                    console.log('Gyro permission denied');
                     sendEvent({
                         action: 'gyro_denied',
                         value: "Gyro Permissions Denied",
@@ -89,67 +117,49 @@ const Video360Player = () => {
         }
     };
 
-    // Check local storage and request permission as necessary
-useEffect(() => {
-    const storedPermission = localStorage.getItem('gyroPermission');
-    const shouldQueryPermission = DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function";
-
-    // Reset gyro state on mount to handle fresh sessions
-    setGyroEnabled(false);
-    
-    // If permission was granted in previous session, attempt to initialize with gyro
-    if (storedPermission === 'granted') {
-        DeviceMotionEvent.requestPermission().then((status) => {
-            if (status === 'granted') {
-                setGyroEnabled(true);
-                setShowGyroButton(false);
-                initializeViewer(true);
-            } else {
-                setShowGyroButton(true); // Show button if permission is denied or revoked
-            }
-        }).catch(error => {
-            console.log("Error re-checking gyro permission:", error);
-            setShowGyroButton(true); // Show button if an error occurs
-        });
-    } else if (shouldQueryPermission) {
-        // Show button if permission is required and hasn't been requested yet
-        setShowGyroButton(true);
-    }
-}, []);
-
-
-
     useEffect(() => {
-        if (audioRef.current) {
-            if (volumeOn) {
-                audioRef.current.play();
-            } else {
-                audioRef.current.pause();
-            }
+        const storedPermission = localStorage.getItem('gyroPermission');
+        const shouldQueryPermission = DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function";
+        setGyroEnabled(false);
+
+        if (storedPermission === 'granted') {
+            DeviceMotionEvent.requestPermission().then((status) => {
+                if (status === 'granted') {
+                    setGyroEnabled(true);
+                    setShowGyroButton(false);
+                    initializeViewer(true);
+                } else {
+                    setShowGyroButton(true);
+                }
+            }).catch(error => {
+                console.log("Error re-checking gyro permission:", error);
+                setShowGyroButton(true);
+            });
+        } else if (shouldQueryPermission) {
+            setShowGyroButton(true);
         }
-    }, [volumeOn]);
+    }, []);
 
     const handleVolumeClick = () => {
-        setVolumeOn(!volumeOn)
-        console.log('clicked')
-    }
+        setVolumeOn(!volumeOn);
+    };
 
     return (
-        <div id="viewer" style={{ width: '100%', height: '90vh', backgroundColor: 'black' }} className='relative overflow-hidden'>
+        <div id="viewer" ref={playerRef} style={{ width: '100%', height: '90vh', backgroundColor: 'black' }} className='relative overflow-hidden'>
             <canvas className="view360-canvas" />
             <audio ref={audioRef} src="/forestBackground.mp3" loop />
 
             <div className="absolute top-3 left-3 w-full inset-0 flex flex-col items-start justify-start text-white z-30 bg-transparent">
-                <div className='text-xl bg-black/50 rounded-full border border-white p-2' onClick={handleVolumeClick}>{volumeOn ? <FaVolumeHigh/> : <FaVolumeXmark /> }
+                <div className='text-xl bg-black/50 rounded-full border border-white p-2' onClick={handleVolumeClick}>
+                    {volumeOn ? <FaVolumeHigh/> : <FaVolumeXmark />}
                 </div>
             </div>
-            {/* Show an overlay button if gyro permission is required */}
             {showGyroButton && !gyroEnabled && (
                 <motion.div 
-                initial={{opacity: 0}}
-                animate={{opacity: 1}}
-                transition={{duration: 1, delay: 0.5}}
-                className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 z-30">
+                    initial={{opacity: 0}}
+                    animate={{opacity: 1}}
+                    transition={{duration: 1, delay: 0.5}}
+                    className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 z-30">
                     <Image
                         src="/look-around.svg"
                         alt="Look Around"
@@ -166,8 +176,7 @@ useEffect(() => {
                 </motion.div>
             )}
             <div className="absolute bottom-[7vh] left-0 w-full inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparent pointer-events-none">
-                <div className='text-4xl animate animate-pulse'><SlArrowDown />
-                </div>
+                <div className='text-4xl animate animate-pulse'><SlArrowDown /></div>
             </div>
         </div>
     );
