@@ -81,7 +81,7 @@ export default function Home() {
       >
         <video
           ref={videoRef}
-          src="/intro-flight.mp4"
+          src="https://upcdn.io/W142iUD/raw/greencubes/intro-flight-sml.mp4"
           className="w-full max-w-3xl"
           muted
           playsInline
