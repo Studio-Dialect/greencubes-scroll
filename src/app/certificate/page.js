@@ -9,6 +9,8 @@ export default function Certificate() {
     const [userName, setUserName] = useState("");
 
     useEffect(() => {
+         // Scroll to the top when the component is mounted
+        window.scrollTo(0, 0);
         // Access the query parameters from the URL
         const params = new URLSearchParams(window.location.search);
         const nameFromQuery = params.get('name'); // Get the 'name' query parameter

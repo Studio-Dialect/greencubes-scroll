@@ -88,7 +88,7 @@ export default function Certificate({ userName }) {
         <div className="relative overflow-hidden">
         <div className="background-diagonal"></div>
         {/* Certificate Section */}
-        <div className="h-full flex flex-col justify-start items-center bg-transparent shadow px-5 pt-4" ref={certificateRef}>
+        <div className="h-full flex flex-col justify-start items-center bg-transparent shadow px-5 pt-3.5" ref={certificateRef}>
             <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
                 {/* Header */}
                 <div className="relative bg-gradient-to-r from-green-400 to-yellow-300 bg-cover w-full h-36 rounded-t-none rounded-b-[100%] flex items-center justify-center mt-[-4vh]">
@@ -126,7 +126,7 @@ export default function Certificate({ userName }) {
                     {/* Signature */}
                     <div className="flex flex-col justify-left items-left mt-3 px-7">
                         <img src="/signature.png" alt="Signature" style={{ width: '40vw' }} />
-                        <div className="text-[0.5em] mt-[-5px] mb-2 ml-[22vw]">{formattedDate}</div>
+                        <div className="text-black text-[0.6em] mt-[-5px] mb-2 ml-[19vw]">{formattedDate}</div>
                     </div>
 
                     {/* Footer */}
@@ -137,7 +137,7 @@ export default function Certificate({ userName }) {
             </div>
 
             {/* Seal */}
-            <div className="flex justify-end items-center mt-[-8vh] mb-5 pr-6 w-full">
+            <div className="flex justify-end items-center mt-[-9.5vh] mb-5 pr-6 w-full">
                 <img src="/seal.png" alt="Hexagon Seal" style={{ width: '30vw' }} />
             </div>
         </div>
