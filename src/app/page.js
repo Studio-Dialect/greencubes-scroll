@@ -32,11 +32,11 @@ export default function Home() {
 
     setTimeout(() => {
       setShowAmablePoster(true); // Hide AmablePoster after Video360Player loads
-    }, 10000);
+    }, 12000);
     setTimeout(() => {
       setShowVideo360(true);
       setShowAmablePoster(false);
-    }, 12500);
+    }, 14500);
   };
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export default function Home() {
       >
         <video
           ref={videoRef}
-          src="https://upcdn.io/W142iUD/raw/greencubes/zoom_02_sm.mp4"
+          src="https://upcdn.io/W142iUD/raw/greencubes/zoom_05_sm.mp4"
           className="w-full max-w-3xl"
           muted
           playsInline
