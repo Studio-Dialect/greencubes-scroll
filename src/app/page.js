@@ -107,7 +107,7 @@ export default function Home() {
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
           <div className="text-white text-center mb-7">
-            <p className="pb-5">It seems the video is taking longer to load. Please try again or check your connection.</p>
+            <p className="pb-8">It looks like the process is taking longer than expected. Please check your connection or click below to proceed.</p>
             <Link href='/form' className="w-full py-2 px-5 bg-lime-500 hover:bg-green-500 text-white text-lg rounded">
               Take me to Certificate
             </Link>
@@ -168,4 +168,5 @@ export default function Home() {
     </div>
   );
 }
+
 
