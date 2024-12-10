@@ -4,13 +4,13 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRouter } from 'next/navigation';
 import { sendEvent } from '../../../utils/analytics';
 
-const ScrollElement = () => {
+const ScrollElement = ({onViewportEnter, onViewportReturn}) => {
     const { scrollYProgress } = useScroll();
     const [userName, setUserName] = useState(''); // Store the user's name
     const router = useRouter(); // Use Next.js router to navigate to Certificate
     const [status, setStatus] = useState(null);
     const [error, setError] = useState(null);
-
+    const [isInView, setIsInView] = useState(false); // Track view state
     const [imagesLoaded, setImagesLoaded] = useState(false);
     const totalFrames = 138;
     const images = useRef([]);
@@ -106,6 +106,21 @@ const ScrollElement = () => {
         }
     };
 
+    const handleViewportEnter = () => {
+        if (!isInView) {
+            setIsInView(true);
+            if (onViewportEnter) onViewportEnter();
+        }
+    };
+
+    // Handle viewport return
+    const handleViewportLeave = () => {
+        if (isInView) {
+            setIsInView(false);
+            if (onViewportReturn) onViewportReturn();
+        }
+    };
+
     return (
         <div style={{ height: '1000vh' }} className='bg-black'> {/* Tall container for scrolling */}
             
@@ -122,7 +137,9 @@ const ScrollElement = () => {
             />
 
             {/* Step 3: Key messages slide in */}
-            <div className="fixed top-0 left-0 w-full h-screen flex items-end justify-center">
+            <div 
+            className="fixed top-0 left-0 w-full h-screen flex items-end justify-center"
+            >
                 <motion.div 
                     style={{ x: message1X, 
                             opacity: message1Opacity,
@@ -156,6 +173,8 @@ const ScrollElement = () => {
             <motion.div 
                 style={{ opacity: callToActionOpacity, y: callToActionY }}
                 className="w-full h-screen bg-[url('/frog.jpg')] bg-cover bg-center flex items-center justify-center fixed top-0"
+                onViewportEnter={handleViewportEnter}
+                onViewportLeave={handleViewportLeave}
             >
                 <div className="text-center text-white flex flex-col items-between justify-around h-full px-12">
                     <h1 className="text-4xl capitalize font-semibold">ACTIVATE YOUR GREEN CUBE</h1>

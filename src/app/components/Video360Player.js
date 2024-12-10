@@ -145,7 +145,7 @@ const Video360Player = () => {
     };
 
     return (
-        <div id="viewer" ref={playerRef} style={{ width: '100%', height: '90vh', backgroundColor: 'black' }} className='relative overflow-hidden'>
+        <div id="viewer" ref={playerRef} style={{ width: '100%', height: '85vh', marginTop:'5vh', backgroundColor: 'black' }} className='relative overflow-hidden'>
             <canvas className="view360-canvas" />
             <audio ref={audioRef} src="/forestBackground.mp3" loop />
 
