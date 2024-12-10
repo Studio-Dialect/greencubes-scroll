@@ -1,11 +1,13 @@
 'use client'
 import { useState, useEffect, useRef } from 'react';
 import { sendEvent } from '../../../utils/analytics';
+import { useRouter } from 'next/navigation';
 
 export default function Form() {
     const [userName, setUserName] = useState(''); // Store the user's name
     const [status, setStatus] = useState(null);
     const [error, setError] = useState(null);
+    const router = useRouter();
 
     // Handle form submission
     const handleSubmit = async (event) => {
@@ -96,3 +98,4 @@ className="w-full h-screen bg-[url('/frog.jpg')] bg-cover bg-center flex items-c
 
 );
 }
+
