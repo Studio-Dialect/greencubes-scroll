@@ -104,6 +104,7 @@ export default function Home() {
           poster="/intro-flight.jpg"
         />
       </motion.div>
+{/*
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
           <div className="text-white text-center mb-7">
@@ -114,6 +115,7 @@ export default function Home() {
           </div>
         </Modal>
       )}
+      */}
 
       {/* AmablePoster overlay with fade animation */}
       <AnimatePresence>
