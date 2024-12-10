@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Suspense} from 'react';
 import ExploreBtn from './components/ExploreBtn';
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,6 +8,8 @@ import Image from 'next/image';
 import AmablePoster from './components/AmablePoster';
 import Video360Player from './components/Video360Player';
 import { sendEvent } from '../../utils/analytics';
+import Modal from './components/Modal';
+import Link from 'next/link';
 
 //const Video360Player = dynamic(() => import('./components/Video360Player'), { ssr: false });
 
@@ -18,6 +20,9 @@ export default function Home() {
   const [showAmablePoster, setShowAmablePoster] = useState(false);
   const [showMainVideo, setShowMainVideo] = useState(true);
   const videoRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const exploreClicked = useRef(false);
 
   const handleExploreClick = () => {    
     if (videoRef.current) {
@@ -30,6 +35,8 @@ export default function Home() {
       value: "Explore",
     });
 
+    exploreClicked.current = true; 
+
     setTimeout(() => {
       setShowAmablePoster(true); // Hide AmablePoster after Video360Player loads
     }, 12000);
@@ -40,15 +47,22 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const videoElement = videoRef.current;
+    const modalTimeout = setTimeout(() => {
+      if (!exploreClicked.current) {
+        // Show modal only if explore button hasn't been clicked
+        setShowModal(true);
+      }
+    }, 4000);
 
+    const videoElement = videoRef.current;
     if (videoElement) {
-      videoElement.addEventListener('ended', handleVideoEnd);
+      videoElement.addEventListener("ended", handleVideoEnd);
     }
 
     return () => {
+      clearTimeout(modalTimeout); // Clean up the timeout
       if (videoElement) {
-        videoElement.removeEventListener('ended', handleVideoEnd);
+        videoElement.removeEventListener("ended", handleVideoEnd);
       }
     };
   }, []);
@@ -72,6 +86,7 @@ export default function Home() {
 
   return (
     <div className="bg-black relative">
+    
       {/* Video Player with AmablePoster overlay */}
       <motion.div
         className="fixed inset-0 flex items-center justify-center bg-black z-0"
@@ -85,9 +100,20 @@ export default function Home() {
           className="w-full max-w-3xl"
           muted
           playsInline
+          preload="auto"
           poster="/intro-flight.jpg"
         />
       </motion.div>
+      {showModal && (
+        <Modal onClose={() => setShowModal(false)}>
+          <div className="text-white text-center mb-7">
+            <p className="pb-5">It seems the video is taking longer to load. Please try again or check your connection.</p>
+            <Link href='/form' className="w-full py-2 px-5 bg-lime-500 hover:bg-green-500 text-white text-lg rounded">
+              Take me to Certificate
+            </Link>
+          </div>
+        </Modal>
+      )}
 
       {/* AmablePoster overlay with fade animation */}
       <AnimatePresence>
@@ -142,3 +168,4 @@ export default function Home() {
     </div>
   );
 }
+
