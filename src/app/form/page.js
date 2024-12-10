@@ -40,7 +40,7 @@ return (
 <div 
 className="w-full h-screen bg-[url('/frog.jpg')] bg-cover bg-center flex items-center justify-center fixed top-0"
 >
-<div className="text-center text-white flex flex-col items-between justify-around h-full px-12">
+<div className="text-center text-white flex flex-col items-between justify-around h-full px-12 mb-[20%]">
     <h1 className="text-4xl capitalize font-semibold">ACTIVATE YOUR GREEN CUBE</h1>
     <form name='Sign Up' className="mt-4 space-y-4 flex flex-col justify-center items-center px-5" onSubmit={handleSubmit} netlify>
     <input type="hidden" name="form-name" value="Sign Up" />
