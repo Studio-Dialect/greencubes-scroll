@@ -1,7 +1,7 @@
 'use client'
 import { HiDownload } from "react-icons/hi";
 import { toJpeg } from 'html-to-image';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image'; // Import Next.js Image
 import { sendEvent } from '../../../utils/analytics';
 import * as htmlToImage from 'html-to-image';
@@ -10,6 +10,7 @@ import Link from "next/link";
 
 export default function Certificate({ userName }) {
     const certificateRef = useRef(); // Reference to the certificate element
+    const [isLoading, setIsLoading] = useState(false);
 
     const waitForFonts = async () => {
         if (document.fonts) {
@@ -35,46 +36,31 @@ export default function Certificate({ userName }) {
     
     const handleDownload = async () => {
         if (certificateRef.current === null) return;
-    
+
         sendEvent({
             action: 'certificate_downloaded',
             value: "Certificate Downloaded",
         });
-    
+
         try {
+            setIsLoading(true); // Show spinner
             await waitForFonts();
             await waitForImages(certificateRef.current);
-    
-            // Force reflow for reliability
-            certificateRef.current.style.display = 'none';
-            certificateRef.current.offsetHeight; // Trigger reflow
-            certificateRef.current.style.display = '';
-
-            // Capture image and retry up to two more times
-                
-            await htmlToImage.toJpeg(certificateRef.current, { quality: 0.95 });
-            await htmlToImage.toJpeg(certificateRef.current, { quality: 0.95 });
-            await htmlToImage.toJpeg(certificateRef.current, { quality: 0.95 });
 
             const dataUrl = await htmlToImage.toJpeg(certificateRef.current, { quality: 0.95 });
-
-            if (dataUrl) {
-                const blob = await fetch(dataUrl).then((res) => res.blob());
-                const file = new File([blob], 'certificate.jpg', { type: blob.type });
-                
-                // Initiate download by creating an anchor element
-                const link = document.createElement('a');
-                link.download = file.name;
-                link.href = URL.createObjectURL(file);
-                link.click();
-                URL.revokeObjectURL(link.href); // Clean up the object URL
-            } else {
-                console.error('Failed to capture image after multiple attempts.');
-            }
-            } catch (err) {
+            const blob = await fetch(dataUrl).then((res) => res.blob());
+            const link = document.createElement('a');
+            link.download = 'certificate.jpg';
+            link.href = URL.createObjectURL(blob);
+            link.click();
+            URL.revokeObjectURL(link.href);
+        } catch (err) {
             console.error('Error capturing image:', err);
-            }
-        };
+        } finally {
+            setIsLoading(false); // Hide spinner
+        }
+    };
+
     
         const today = new Date();
         const formattedDate = today.toLocaleDateString("en-US", {
@@ -159,7 +145,20 @@ export default function Certificate({ userName }) {
             <div className="text-center">
             <div className="flex justify-center">
                 <div className="bg-lime-500 p-5 rounded-full" onClick={handleDownload}> {/* Handle download on click */}
-                <HiDownload className="text-5xl"/>
+                {isLoading ? 
+                    <svg class="text-gray-300 animate-spin" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    width="50" height="50">
+                    <path
+                        d="M32 3C35.8083 3 39.5794 3.75011 43.0978 5.20749C46.6163 6.66488 49.8132 8.80101 52.5061 11.4939C55.199 14.1868 57.3351 17.3837 58.7925 20.9022C60.2499 24.4206 61 28.1917 61 32C61 35.8083 60.2499 39.5794 58.7925 43.0978C57.3351 46.6163 55.199 49.8132 52.5061 52.5061C49.8132 55.199 46.6163 57.3351 43.0978 58.7925C39.5794 60.2499 35.8083 61 32 61C28.1917 61 24.4206 60.2499 20.9022 58.7925C17.3837 57.3351 14.1868 55.199 11.4939 52.5061C8.801 49.8132 6.66487 46.6163 5.20749 43.0978C3.7501 39.5794 3 35.8083 3 32C3 28.1917 3.75011 24.4206 5.2075 20.9022C6.66489 17.3837 8.80101 14.1868 11.4939 11.4939C14.1868 8.80099 17.3838 6.66487 20.9022 5.20749C24.4206 3.7501 28.1917 3 32 3L32 3Z"
+                        stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="text-white"></path>
+                    <path
+                        d="M32 3C36.5778 3 41.0906 4.08374 45.1692 6.16256C49.2477 8.24138 52.7762 11.2562 55.466 14.9605C58.1558 18.6647 59.9304 22.9531 60.6448 27.4748C61.3591 31.9965 60.9928 36.6232 59.5759 40.9762"
+                        stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" className='text-lime-600'>
+                    </path>
+                    </svg>
+                    :
+                    <HiDownload className="text-5xl"/>
+                    }
                 </div>
             </div>
             <p className="text-white font-semibold mt-4 text-lg leading-tight">DOWNLOAD <br/> CERTIFICATE</p>

@@ -10,6 +10,8 @@ import Video360Player from './components/Video360Player';
 import { sendEvent } from '../../utils/analytics';
 import Modal from './components/Modal';
 import Link from 'next/link';
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+
 
 //const Video360Player = dynamic(() => import('./components/Video360Player'), { ssr: false });
 
@@ -22,6 +24,7 @@ export default function Home() {
   const videoRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [showSkip, setShowSkip] = useState(false)
   const exploreClicked = useRef(false);
 
   const handleExploreClick = () => {    
@@ -29,6 +32,7 @@ export default function Home() {
       videoRef.current.play();
     }
     setBtnVisible(false);
+    setShowSkip(true);
 
     sendEvent({
       action: 'explore_click',
@@ -82,6 +86,14 @@ export default function Home() {
 
   const handleVideo360Loaded = () => {
     setVideo360Loaded(true);
+  };
+
+  const handleHideSkip = () => {
+    setShowSkip(false);
+  };
+
+  const handleShowSkip = () => {
+    setShowSkip(true);
   };
 
   return (
@@ -152,7 +164,7 @@ export default function Home() {
           animate={showVideo360 ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 1, delay: 1 }}
         >
-          <ScrollElement />
+          <ScrollElement onViewportEnter={handleHideSkip} onViewportReturn={handleShowSkip} />
         </motion.div>
       </div>
       {/* Explore Button */}
@@ -167,6 +179,18 @@ export default function Home() {
           <Image src="/greencubes-logo-white.svg" alt="Green Cubes Footer" width={288} height={96} className="w-80" />
         </div>
       </motion.div>
+      <AnimatePresence>
+      {showSkip &&
+        <motion.div 
+        initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+        className='fixed left-0 top-0 w-full p-2 bg-lime-500 hover:bg-green-500 text-white text-lg z-40 flex items-center justify-between'>
+        <Image src="/greencubes-logo-white.svg" alt="Green Cubes Footer" width={288} height={96} className="w-28" /><Link href='/form' className='flex items-center justify-end text-xs hover:underline'>Skip to Certificate <MdOutlineKeyboardArrowRight  className='ml-1'/></Link>
+        </motion.div>
+      } 
+      </AnimatePresence>
     </div>
   );
 }
