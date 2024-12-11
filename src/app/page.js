@@ -187,7 +187,7 @@ export default function Home() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
         className='fixed left-0 top-0 w-full p-2 bg-black hover:bg-green-500 text-white text-lg z-40 flex items-center justify-between'>
-        <Image src="/greencubes-logo-white.svg" alt="Green Cubes Footer" width={288} height={96} className="w-28" /><Link href='/form' className='flex items-center justify-end text-xs hover:underline'>Skip to Certificate <MdOutlineKeyboardArrowRight  className='ml-1'/></Link>
+        <Image src="/greencubes-logo-white.svg" alt="Green Cubes Footer" width={288} height={96} priority className="w-28" /><Link href='/form' className='flex items-center justify-end text-xs hover:underline'>Skip to Certificate <MdOutlineKeyboardArrowRight  className='ml-1'/></Link>
         </motion.div>
       } 
       </AnimatePresence>
