@@ -1,10 +1,10 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import { useRouter } from 'next/navigation';
 import { sendEvent } from '../../../utils/analytics';
 
-const ScrollElement = ({onViewportEnter, onViewportReturn}) => {
+const ScrollElement = ({onShowSkip, onHideSkip}) => {
     const { scrollYProgress } = useScroll();
     const [userName, setUserName] = useState(''); // Store the user's name
     const router = useRouter(); // Use Next.js router to navigate to Certificate
@@ -56,6 +56,8 @@ const ScrollElement = ({onViewportEnter, onViewportReturn}) => {
             });
             return () => unsubscribe();
         }
+
+        
     }, [frame, imagesLoaded]);
 
     // Step 3: Key messages animation (slide in)
@@ -77,6 +79,11 @@ const ScrollElement = ({onViewportEnter, onViewportReturn}) => {
     const callToActionY = useTransform(scrollYProgress, [0.5, 0.7], [800, 0]);
     const callToActionOpacity = useTransform(scrollYProgress, [0.5, 0.65], [0, 1]);
 
+
+    const bannerArrowOpacity = useTransform(scrollYProgress, [0, 0.45, 0.55], [1, 1, 0]);
+
+
+    
 
     // Handle form submission
     const handleSubmit = async (event) => {
@@ -106,20 +113,14 @@ const ScrollElement = ({onViewportEnter, onViewportReturn}) => {
         }
     };
 
-    const handleViewportEnter = () => {
-        if (!isInView) {
-            setIsInView(true);
-            if (onViewportEnter) onViewportEnter();
-        }
-    };
 
-    // Handle viewport return
-    const handleViewportLeave = () => {
-        if (isInView) {
-            setIsInView(false);
-            if (onViewportReturn) onViewportReturn();
+    useMotionValueEvent(bannerArrowOpacity, "change", (latest) => {
+        if (latest === 1) {
+            if (onShowSkip) onShowSkip();
+        } else if (latest === 0) {
+            if (onHideSkip) onHideSkip();
         }
-    };
+    });
 
     return (
         <div style={{ height: '1000vh' }} className='bg-black'> {/* Tall container for scrolling */}
@@ -173,10 +174,8 @@ const ScrollElement = ({onViewportEnter, onViewportReturn}) => {
             <motion.div 
                 style={{ opacity: callToActionOpacity, y: callToActionY }}
                 className="w-full h-screen bg-[url('/frog.jpg')] bg-cover bg-center flex items-center justify-center fixed top-0"
-                onViewportEnter={handleViewportEnter}
-                onViewportLeave={handleViewportLeave}
             >
-                <div className="text-center text-white flex flex-col items-between justify-around h-full px-12">
+                <div className="relative text-center text-white flex flex-col items-between justify-around h-full px-12 z-40">
                     <h1 className="text-4xl capitalize font-semibold">ACTIVATE YOUR GREEN CUBE</h1>
                     <form name='Sign Up' className="mt-4 space-y-4 flex flex-col justify-center items-center px-5" onSubmit={handleSubmit} netlify>
                     <input type="hidden" name="form-name" value="Sign Up" />
