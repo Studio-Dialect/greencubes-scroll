@@ -145,7 +145,7 @@ const Video360Player = () => {
     };
 
     return (
-        <div id="viewer" ref={playerRef} style={{ width: '100%', height: '85vh', marginTop:'5vh', backgroundColor: 'black' }} className='relative overflow-hidden'>
+        <div id="viewer" ref={playerRef} style={{ width: '100%', height: '85vh', marginTop:'4vh', backgroundColor: 'black' }} className='relative overflow-hidden'>
             <canvas className="view360-canvas" />
             <audio ref={audioRef} src="/forestBackground.mp3" loop />
 
@@ -175,9 +175,11 @@ const Video360Player = () => {
                     </button>
                 </motion.div>
             )}
-            <div className="absolute bottom-[7vh] left-0 w-full inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparent pointer-events-none">
-                <div className='text-4xl animate animate-pulse'><SlArrowDown /></div>
-            </div>
+            {/* 
+                <div className="absolute bottom-[7vh] left-0 w-full inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparent pointer-events-none">
+                    <div className='text-4xl animate animate-pulse'><SlArrowDown /></div>
+                </div>
+            */}
         </div>
     );
 };
