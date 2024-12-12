@@ -173,18 +173,18 @@ export default function Home() {
           animate={showVideo360 ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 1, delay: 1 }}
         >
-          <ScrollElement onViewportEnter={handleHideSkip} onViewportReturn={handleShowSkip} />
+            <ScrollElement onShowSkip={handleShowSkip} onHideSkip={handleHideSkip} />
         </motion.div>
         {/* Scroll Indicator Arrow */}
-        {showSkip &&
+      {showSkip &&
         <motion.div 
         initial={{ opacity: 0 }}
         animate={showVideo360 ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 0.5, delay: 1 }}
-        className="fixed bottom-[5vh] left-0 w-full inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparent pointer-events-none">
+        className="fixed bottom-[3vh] left-0 w-full inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparent pointer-events-none">
                 <div className='text-4xl animate animate-pulse'><SlArrowDown /></div>
         </motion.div>
-        } 
+        }
       </div>
       {/* Explore Button */}
       <motion.div
