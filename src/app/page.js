@@ -11,6 +11,7 @@ import { sendEvent } from '../../utils/analytics';
 import Modal from './components/Modal';
 import Link from 'next/link';
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { SlArrowDown } from "react-icons/sl";
 
 
 //const Video360Player = dynamic(() => import('./components/Video360Player'), { ssr: false });
@@ -26,6 +27,13 @@ export default function Home() {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [showSkip, setShowSkip] = useState(false)
   const exploreClicked = useRef(false);
+
+  const isBrowser = () => typeof window !== 'undefined'; //The approach recommended by Next.js
+
+  function scrollToTop() {
+      if (!isBrowser()) return;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   const handleExploreClick = () => {    
     if (videoRef.current) {
@@ -47,6 +55,7 @@ export default function Home() {
     setTimeout(() => {
       setShowVideo360(true);
       setShowAmablePoster(false);
+      scrollToTop()
     }, 14500);
   };
 
@@ -166,6 +175,16 @@ export default function Home() {
         >
           <ScrollElement onViewportEnter={handleHideSkip} onViewportReturn={handleShowSkip} />
         </motion.div>
+        {/* Scroll Indicator Arrow */}
+        {showSkip &&
+        <motion.div 
+        initial={{ opacity: 0 }}
+        animate={showVideo360 ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.5, delay: 1 }}
+        className="fixed bottom-10 left-0 w-full inset-0 flex flex-col items-center justify-end text-white z-30 bg-transparent pointer-events-none">
+                <div className='text-4xl animate animate-pulse'><SlArrowDown /></div>
+        </motion.div>
+        } 
       </div>
       {/* Explore Button */}
       <motion.div
@@ -180,6 +199,7 @@ export default function Home() {
         </div>
       </motion.div>
       <AnimatePresence>
+      {/* Skip to certificate banner */}
       {showSkip &&
         <motion.div 
         initial={{ opacity: 0 }}
